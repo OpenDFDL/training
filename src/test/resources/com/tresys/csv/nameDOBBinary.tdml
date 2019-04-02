@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
+<testSuite suiteName="NameDOB"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:ex="http://example.com"
+  xmlns:tns="http://example.com"
+  defaultRoundTrip="onePass">
+  
+   <tdml:defineSchema name="testBin" elementFormDefault="unqualified">
+      <xs:include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+      <dfdl:format ref="tns:GeneralFormat"
+         representation="binary" 
+         encoding="ASCII" 
+         lengthUnits='bits'
+         alignment="8" 
+         alignmentUnits="bits"/>
+
+  <xs:element name="file">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="lastNamePI" type="tns:PI" />
+              <xs:element name="middleNamePI" type="tns:PI" />
+              <xs:element name="firstNamePI" type="tns:PI" />
+              <xs:element name="DOBPI" type="tns:PI" />
+              <xs:element name="lastName" type="tns:zString" minOccurs="0"
+                dfdl:occursCountKind="expression" 
+                dfdl:occursCount='{ ../lastNamePI }' />
+              <xs:element name="middleName" type="tns:zString" minOccurs="0"
+                dfdl:occursCountKind="expression" 
+                dfdl:occursCount='{ ../middleNamePI }' />
+              <xs:element name="firstName" type="tns:zString" minOccurs="0"
+                dfdl:occursCountKind="expression" 
+                dfdl:occursCount='{ ../firstNamePI }' />
+              <xs:element name="DOB" type="xs:date" minOccurs="0"
+                dfdl:occursCountKind="expression" 
+                dfdl:occursCount='{ ../DOBPI }'
+                dfdl:calendarPattern="MMddyyyy"
+                dfdl:calendarPatternKind="explicit" 
+                dfdl:binaryCalendarRep="bcd" 
+                dfdl:lengthKind="explicit" 
+                dfdl:lengthUnits="bytes" 
+                dfdl:length="4" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:simpleType name="PI" dfdl:lengthKind="explicit" 
+    dfdl:lengthUnits="bits" dfdl:length="1" 
+    dfdl:alignment="1" dfdl:binaryNumberRep="binary">
+    <xs:restriction base="xs:unsignedByte"/>
+  </xs:simpleType>
+  
+  <xs:simpleType name="zString" dfdl:lengthKind="delimited" dfdl:terminator="%NUL;">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  
+  </tdml:defineSchema>
+  
+  <tdml:unparserTestCase name="nameDOB_testBin1" root="file"
+    model="testBin" 
+    roundTrip="onePass">
+    <tdml:document>
+      <tdml:documentPart type="byte">F0</tdml:documentPart>
+      <tdml:documentPart type="text" replaceDFDLEntities="true"><![CDATA[smith, jr.%NUL;robert%NUL;brandon%NUL;]]></tdml:documentPart>
+      <tdml:documentPart type="byte">03241988</tdml:documentPart>
+      <tdml:documentPart type="byte">10</tdml:documentPart>
+      <tdml:documentPart type="byte">02282019</tdml:documentPart>
+    </tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset>
+        <ex:file>
+          <record>
+            <lastNamePI>1</lastNamePI>
+            <middleNamePI>1</middleNamePI>
+            <firstNamePI>1</firstNamePI>
+            <DOBPI>1</DOBPI>
+            <lastName>smith, jr.</lastName>
+            <middleName>robert</middleName>
+            <firstName>brandon</firstName>
+            <DOB>1988-03-24</DOB>  
+          </record>
+          <record>
+            <lastNamePI>0</lastNamePI>
+            <middleNamePI>0</middleNamePI>
+            <firstNamePI>0</firstNamePI>
+            <DOBPI>1</DOBPI>
+            <DOB>2019-02-28</DOB>  
+          </record>
+        </ex:file>
+      </tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:unparserTestCase>
+  
+  <tdml:defineSchema name="testBinOVC" elementFormDefault="unqualified">
+      <xs:include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+      <dfdl:format ref="tns:GeneralFormat"
+         representation="binary" 
+         encoding="ASCII" 
+         lengthUnits='bits'
+         alignment="8" 
+         alignmentUnits="bits"/>
+ 
+    <xs:element name="file" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="record" maxOccurs="unbounded"
+          dfdl:occursCountKind="implicit">
+          <xs:complexType>
+            <xs:sequence>
+                <xs:sequence dfdl:hiddenGroupRef="tns:piGroup"/>
+                <xs:element name="lastName" type="tns:zString" minOccurs="0"
+                  dfdl:occursCountKind="expression"
+                  dfdl:occursCount='{ ../lastNamePI }'
+                />                  
+                <xs:element name="firstName" type="tns:zString"  minOccurs="0"
+                  dfdl:occursCountKind="expression"
+                  dfdl:occursCount='{ ../firstNamePI }'
+                 />
+                <xs:element name="middleName" type="tns:zString" minOccurs="0"
+                  dfdl:occursCountKind="expression"
+                  dfdl:occursCount='{ ../middleNamePI }'
+                 />
+
+                <xs:element name="DOB" type="xs:date"
+                   dfdl:calendarPattern="MMddyyyy" 
+                   dfdl:calendarPatternKind="explicit"
+                   dfdl:binaryCalendarRep="bcd"
+                   minOccurs="0"
+                   dfdl:lengthKind="explicit"
+                   dfdl:lengthUnits="bytes"
+                   dfdl:length="4"
+                   dfdl:occursCountKind="expression"
+                   dfdl:occursCount='{ ../DOBPI }'/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:group name="piGroup">
+    <xs:sequence>
+      <xs:element name="lastNamePI" type="tns:PI"
+        dfdl:outputValueCalc='{ if (fn:exists(../firstName)) then 1 else 0 }'/>
+      <xs:element name="firstNamePI" type="tns:PI"
+        dfdl:outputValueCalc='{ if (fn:exists(../lastName)) then 1 else 0 }'/>
+      <xs:element name="middleNamePI" type="tns:PI"
+        dfdl:outputValueCalc='{ if (fn:exists(../middleName)) then 1 else 0 }'/>
+      <xs:element name="DOBPI" type="tns:PI"
+        dfdl:outputValueCalc='{ if (fn:exists(../DOB)) then 1 else 0 }'/>
+    </xs:sequence>
+  </xs:group>
+  
+  <xs:simpleType name="PI" dfdl:lengthKind="explicit" 
+    dfdl:lengthUnits="bits" dfdl:length="1" 
+    dfdl:alignment="1" dfdl:binaryNumberRep="binary">
+    <xs:restriction base="xs:unsignedByte"/>
+  </xs:simpleType>
+  
+  <xs:simpleType name="zString" dfdl:lengthKind="delimited" dfdl:terminator="%NUL;">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  
+  </tdml:defineSchema>
+  
+  <tdml:unparserTestCase name="nameDOB_testBinOVC1" root="file"
+    model="testBinOVC" 
+    roundTrip="onePass">
+    <tdml:document>
+      <tdml:documentPart type="byte">F0</tdml:documentPart>
+      <tdml:documentPart type="text" 
+        replaceDFDLEntities="true"><![CDATA[smith, jr.%NUL;robert%NUL;brandon%NUL;]]></tdml:documentPart>
+      <tdml:documentPart type="byte">03241988</tdml:documentPart>
+      <tdml:documentPart type="byte">10</tdml:documentPart>
+      <tdml:documentPart type="byte">02282019</tdml:documentPart>
+    </tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset>
+        <ex:file>
+          <record>
+            <lastName>smith, jr.</lastName>
+            <firstName>robert</firstName>
+            <middleName>brandon</middleName>
+            <DOB>1988-03-24</DOB>  
+          </record>
+          <record>
+            <DOB>2019-02-28</DOB>  
+          </record>
+        </ex:file>
+      </tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:unparserTestCase>
+  
+</testSuite>

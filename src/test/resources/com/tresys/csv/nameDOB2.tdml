@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
+
+<testSuite suiteName="NameDOB"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:ex="http://example.com"
+  xmlns:tns="http://example.com"
+  defaultRoundTrip="onePass">
+  
+  <tdml:defineSchema name="test2" elementFormDefault="unqualified">
+  
+      <xs:include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+      <dfdl:defineEscapeScheme name="eb1">
+        <dfdl:escapeScheme
+          escapeKind="escapeBlock"
+          escapeBlockStart="&quot;"
+          escapeBlockEnd='"'
+          escapeEscapeCharacter='\'
+          generateEscapeBlock="whenNeeded" 
+          extraEscapedCharacters=""
+        />
+      </dfdl:defineEscapeScheme>
+  <dfdl:format ref="tns:GeneralFormat" escapeSchemeRef="tns:eb1" separator=""
+    initiator="" terminator="" leadingSkip='0' textTrimKind="none" initiatedContent="no"
+    alignment="implicit" alignmentUnits="bits" trailingSkip="0" ignoreCase="no"
+    separatorPosition="infix" occursCountKind="implicit" emptyValueDelimiterPolicy="both"
+    representation="text" textNumberRep="standard" lengthKind="delimited" encoding="ASCII" />
+
+  <xs:element name="file2" dfdl:initiator="sep,last,first,middle,DOB%NL;%WSP*;">
+    <xs:complexType>
+      <xs:sequence dfdl:separator="%NL;" dfdl:separatorPosition="postfix">
+        <xs:element name="record" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="sep" type="xs:string" dfdl:lengthKind="explicit"
+                dfdl:length="1" dfdl:lengthUnits="characters" />
+              <xs:sequence dfdl:separator='{ ./sep }'>
+                <xs:element name="lastName" type="xs:string" />
+                <xs:element name="firstName" type="xs:string" />
+                <xs:element name="middleName" type="xs:string" />
+                <xs:element name="DOB" type="xs:date" 
+                  dfdl:calendarPattern="MM/dd/yyyy"
+                  dfdl:calendarPatternKind="explicit" />
+              </xs:sequence>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="file3" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+    <xs:complexType>
+      <xs:sequence dfdl:separator="%NL;" dfdl:separatorPosition="postfix">
+        <xs:element name="record" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="sep" type="xs:string"
+                dfdl:lengthKind="explicit" dfdl:length="1"
+                dfdl:lengthUnits="characters"/>
+              <xs:sequence dfdl:separator='{ ./sep }'>
+                <xs:element name="lastName" type="xs:string" />
+                <xs:element name="firstName" type="xs:string" />
+                <xs:element name="middleName" type="xs:string" />
+                <xs:element name="DOB" type="xs:date"
+                   dfdl:calendarPattern="MM/dd/yyyy" 
+                   dfdl:calendarPatternKind="explicit"/>
+              </xs:sequence>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  
+  </tdml:defineSchema>
+  
+  <tdml:parserTestCase name="nameDOB_test2" root="file2"
+    model="test2" 
+    roundTrip="onePass">
+    <tdml:document><![CDATA[sep,last,first,middle,DOB
+,"smith, jr.",robert,brandon,03/24/1988
+|johnson|john|henry|01/23/1986
+$jones$arya$cat$02/19/1986
+]]></tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset>
+        <ex:file2>
+          <record>
+            <sep>,</sep>
+            <lastName>smith, jr.</lastName>
+            <firstName>robert</firstName>
+            <middleName>brandon</middleName>
+            <DOB>1988-03-24</DOB>
+          </record>
+          <record>
+            <sep>|</sep>
+            <lastName>johnson</lastName>
+            <firstName>john</firstName>
+            <middleName>henry</middleName>
+            <DOB>1986-01-23</DOB>
+          </record>
+          <record>
+            <sep>$</sep>
+            <lastName>jones</lastName>
+            <firstName>arya</firstName>
+            <middleName>cat</middleName>
+            <DOB>1986-02-19</DOB>
+          </record>
+        </ex:file2>
+      </tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:parserTestCase>
+  
+  <tdml:parserTestCase name="nameDOB_test3" root="file3"
+    model="test2" 
+    roundTrip="onePass">
+    <tdml:document>
+      <tdml:documentPart type="text"
+        replaceDFDLEntities="true"><![CDATA[last,first,middle,DOB
+%NUL;smith, jr.%NUL;robert%NUL;brandon%NUL;03/24/1988
+|johnson|john|henry|01/23/1986
+$jones$arya$cat$02/19/1986
+]]></tdml:documentPart></tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset>
+        <ex:file3>
+          <record>
+            <sep>&#xE000;</sep>
+            <lastName>smith, jr.</lastName>
+            <firstName>robert</firstName>
+            <middleName>brandon</middleName>
+            <DOB>1988-03-24</DOB>
+          </record>
+          <record>
+            <sep>|</sep>
+            <lastName>johnson</lastName>
+            <firstName>john</firstName>
+            <middleName>henry</middleName>
+            <DOB>1986-01-23</DOB>
+          </record>
+          <record>
+            <sep>$</sep>
+            <lastName>jones</lastName>
+            <firstName>arya</firstName>
+            <middleName>cat</middleName>
+            <DOB>1986-02-19</DOB>
+          </record>
+        </ex:file3>
+      </tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:parserTestCase>
+  
+</testSuite>
