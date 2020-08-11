@@ -53,7 +53,7 @@
     </xs:complexType>
   </xs:element>
   
-  <xs:element name="file3" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+  <xs:element name="file3" dfdl:initiator="sep,last,first,middle,DOB%NL;%WSP*;">
     <xs:complexType>
       <xs:sequence dfdl:separator="%NL;" dfdl:separatorPosition="postfix">
         <xs:element name="record" maxOccurs="unbounded">
@@ -85,7 +85,7 @@
     roundTrip="onePass">
     <tdml:document><![CDATA[sep,last,first,middle,DOB
 ,"smith, jr.",robert,brandon,03/24/1988
-|johnson|john|henry|01/23/1986
+|johnson, jr.|john|henry|01/23/1986
 $jones$arya$cat$02/19/1986
 ]]></tdml:document>
     <tdml:infoset>
@@ -100,7 +100,7 @@ $jones$arya$cat$02/19/1986
           </record>
           <record>
             <sep>|</sep>
-            <lastName>johnson</lastName>
+            <lastName>johnson, jr.</lastName>
             <firstName>john</firstName>
             <middleName>henry</middleName>
             <DOB>1986-01-23</DOB>
@@ -122,7 +122,7 @@ $jones$arya$cat$02/19/1986
     roundTrip="onePass">
     <tdml:document>
       <tdml:documentPart type="text"
-        replaceDFDLEntities="true"><![CDATA[last,first,middle,DOB
+        replaceDFDLEntities="true"><![CDATA[sep,last,first,middle,DOB
 %NUL;smith, jr.%NUL;robert%NUL;brandon%NUL;03/24/1988
 |johnson|john|henry|01/23/1986
 $jones$arya$cat$02/19/1986

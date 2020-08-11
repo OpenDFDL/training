@@ -152,9 +152,9 @@
   <xs:group name="piGroup">
     <xs:sequence>
       <xs:element name="lastNamePI" type="tns:PI"
-        dfdl:outputValueCalc='{ if (fn:exists(../firstName)) then 1 else 0 }'/>
-      <xs:element name="firstNamePI" type="tns:PI"
         dfdl:outputValueCalc='{ if (fn:exists(../lastName)) then 1 else 0 }'/>
+      <xs:element name="firstNamePI" type="tns:PI"
+        dfdl:outputValueCalc='{ if (fn:exists(../firstName)) then 1 else 0 }'/>
       <xs:element name="middleNamePI" type="tns:PI"
         dfdl:outputValueCalc='{ if (fn:exists(../middleName)) then 1 else 0 }'/>
       <xs:element name="DOBPI" type="tns:PI"
@@ -195,7 +195,7 @@
             <DOB>1988-03-24</DOB>  
           </record>
           <record>
-            <DOB>2019-02-28</DOB>  
+            <DOB>2019-02-28</DOB>
           </record>
         </ex:file>
       </tdml:dfdlInfoset>
