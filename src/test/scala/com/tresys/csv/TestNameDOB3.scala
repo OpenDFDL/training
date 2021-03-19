@@ -1,4 +1,5 @@
 /* Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. */
+
 package com.tresys.csv
 
 import org.junit.Test
@@ -6,7 +7,7 @@ import org.apache.daffodil.tdml.Runner
 import org.junit.AfterClass
 
 object TestNameDOB3 {
-  lazy val runner = Runner("/com/tresys/csv/", "nameDOB2.tdml")
+  lazy val runner = Runner("/com/tresys/csv/", "nameDOB3.tdml")
 
   @AfterClass def shutdown: Unit = { runner.reset }
 
@@ -15,7 +16,6 @@ object TestNameDOB3 {
 class TestNameDOB3 {
   import TestNameDOB3._
 
-  @Test def test_nameDOB_test2() { runner.runOneTest("nameDOB_test2") }
-  @Test def test_nameDOB_test3() { runner.runOneTest("nameDOB_test3") }
+  @Test def test_nameDOB3_test1() { runner.runOneTest("nameDOB3_test1") }
 
 }

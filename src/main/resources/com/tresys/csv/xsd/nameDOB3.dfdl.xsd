@@ -13,12 +13,33 @@
 
   <xs:annotation>
     <xs:appinfo source="http://www.ogf.org/dfdl/">
+
       <dfdl:format
         ref="tns:GeneralFormat"
         representation="text"
         encoding="ASCII"
         lengthKind="delimited"
       />
+
+      <!-- To avoid repetition, we create item and lastItem named formats -->
+
+      <dfdl:defineFormat name="item">
+        <dfdl:format
+          terminator=", | // %HT;"
+        />
+      </dfdl:defineFormat>
+
+      <dfdl:defineFormat name="lastItem">
+        <!--
+        A last item has no terminator of its own.
+        It will be terminated by the enclosing record
+        -->
+        <dfdl:format
+          terminator=""
+        />
+      </dfdl:defineFormat>
+
+
     </xs:appinfo>
   </xs:annotation>
 
@@ -38,13 +59,13 @@
         <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="lastName" type="xs:string" dfdl:terminator=","/>
+              <xs:element name="lastName" type="xs:string" dfdl:ref="ex:item"/>
               <xs:group ref="ex:discriminateTrue"/>
-              <xs:element name="firstName" type="xs:string" dfdl:terminator=","/>
-              <xs:element name="middleName" type="xs:string" dfdl:terminator=","/>
+              <xs:element name="firstName" type="xs:string" dfdl:ref="ex:item"/>
+              <xs:element name="middleName" type="xs:string" dfdl:ref="ex:item"/>
               <xs:element name="DOB" type="xs:date"
                 dfdl:calendarPattern="MM/dd/yyyy"
-                dfdl:calendarPatternKind="explicit"/>
+                dfdl:calendarPatternKind="explicit" dfdl:ref="ex:lastItem"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>

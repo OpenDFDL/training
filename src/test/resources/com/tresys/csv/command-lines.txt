@@ -50,3 +50,23 @@ daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
 #
 daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
   src/test/resources/com/tresys/csv/data/nameDOB1.bad.csv
+
+#
+# NameDOB3 - , | or // as terminators of items.
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB3.csv
+
+#
+# NameDOB3 unparsing - doesn't recreate the input. Creates Canonical form of data
+# which always uses commas.
+#
+daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd \
+    src/test/resources/com/tresys/csv/infosets/nameDOB1.xml
+
+#
+# Fun with unix pipes
+#
+cat src/test/resources/com/tresys/csv/data/nameDOB3.csv | \
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd | \
+daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd
