@@ -11,14 +11,23 @@
   defaultRoundTrip="onePass">
 
   <tdml:parserTestCase name="nameDOB_test1" root="file"
-    model="com/tresys/csv/xsd/nameDOB.dfdl.xsd" 
-    roundTrip="onePass">
+    model="com/tresys/csv/xsd/nameDOB1.dfdl.xsd">
     <tdml:document>
-      <tdml:documentPart type="file">data/nameDOB.csv</tdml:documentPart>
+      <tdml:documentPart type="file">data/nameDOB1.csv</tdml:documentPart>
     </tdml:document>
     <tdml:infoset>
-      <tdml:dfdlInfoset type="file">infosets/nameDOB.xml</tdml:dfdlInfoset>
+      <tdml:dfdlInfoset type="file">infosets/nameDOB1.xml</tdml:dfdlInfoset>
     </tdml:infoset>
+  </tdml:parserTestCase>
+
+  <tdml:parserTestCase name="nameDOB_test_bad_1" root="file"
+                       model="com/tresys/csv/xsd/nameDOB1.dfdl.xsd">
+    <tdml:document>
+      <tdml:documentPart type="file">data/nameDOB1.bad.csv</tdml:documentPart>
+    </tdml:document>
+    <tdml:errors>
+      <tdml:error>left over data</tdml:error>
+    </tdml:errors>
   </tdml:parserTestCase>
   
 </testSuite>

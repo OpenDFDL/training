@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
+
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <xs:include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <xs:annotation>
+    <xs:appinfo source="http://www.ogf.org/dfdl/">
+      <dfdl:format
+        ref="tns:GeneralFormat"
+        representation="text"
+        encoding="ASCII"
+        lengthKind="delimited"
+      />
+    </xs:appinfo>
+  </xs:annotation>
+
+  <xs:element name="file" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="lastName" type="xs:string" dfdl:terminator=","/>
+              <xs:element name="firstName" type="xs:string" dfdl:terminator=","/>
+              <xs:element name="middleName" type="xs:string" dfdl:terminator=","/>
+              <xs:element name="DOB" type="xs:date"
+                dfdl:calendarPattern="MM/dd/yyyy"
+                dfdl:calendarPatternKind="explicit"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

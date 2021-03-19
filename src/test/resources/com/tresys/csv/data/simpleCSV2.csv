@@ -1,0 +1,12 @@
+last,first,middle,DOB
+this line has excess separators,,,,,,,,
+smith,robert,brandon,1988-03-24
+,preceded by an empty field,
+,,preceded by two empty fields,
+notice lines of all commas are not skipped
+,,,,,,,
+notice blank lines are not skipped
+
+johnson,john,henry,1986-01-23
+
+jones,arya,cat,1986-02-19

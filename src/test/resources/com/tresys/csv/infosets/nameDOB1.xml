@@ -1,6 +1,6 @@
 <ex:file xmlns:ex="http://example.com">
   <record>
-    <lastName>smith, jr.</lastName>
+    <lastName>smith</lastName>
     <firstName>robert</firstName>
     <middleName>brandon</middleName>
     <DOB>1988-03-24</DOB>

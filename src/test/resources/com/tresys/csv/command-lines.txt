@@ -1,0 +1,52 @@
+
+#
+# Just parse CSV normally
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/csv.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/simpleCSV.csv
+
+#
+# Parse CSV showing that nothing is enforcing row length
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/csv.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/simpleCSV.bad.1.csv
+
+#
+# Parse with header enforcement (showing it works)
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/csvHeaderEnforced.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/simpleCSV.csv
+
+#
+# Parse with header enforcement (Negative test)
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/csvHeaderEnforced.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/simpleCSV.bad.1.csv
+
+#
+# NameDOB1
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB1.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB1.csv
+
+#
+# NameDOB1 - with date error - ends with "left over data" and
+# an infoset that is missing the final row data.
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB1.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB1.bad.csv
+
+#
+# NameDOB2
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB1.csv
+
+#
+# NameDOB2 - with date error.
+#
+# Use of terminators makes it simpler and now we get a xs:date-oriented error
+# message
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB1.bad.csv
