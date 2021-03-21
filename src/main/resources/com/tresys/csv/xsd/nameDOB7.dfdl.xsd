@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
+
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <xs:include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <xs:annotation>
+    <xs:appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format ref="tns:GeneralFormat"
+                   representation="binary"
+                   byteOrder="bigEndian"
+                   bitOrder="mostSignificantBitFirst"
+                   encoding="ASCII"
+                   lengthUnits='bits'
+                   alignment="1"
+                   alignmentUnits="bits"
+                   occursCountKind="expression"
+                   binaryNumberRep="binary"/>
+
+    </xs:appinfo>
+  </xs:annotation>
+
+  <!-- Presence Indicators or PIs -->
+
+  <xs:simpleType name="PI"
+                 dfdl:lengthKind="explicit"
+                 dfdl:length="1">
+    <xs:restriction base="xs:unsignedByte"/>
+  </xs:simpleType>
+
+  <!-- NUL terminated strings -->
+
+  <xs:simpleType name="zString"
+                 dfdl:lengthKind="delimited"
+                 dfdl:terminator="%NUL;"
+                 dfdl:alignment="8">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:group name="discriminateTrue">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo source="http://www.ogf.org/dfdl/">
+          <dfdl:discriminator test="{ fn:true() }"/>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="piGroup">
+    <xs:sequence>
+      <xs:element name="lastNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../lastName)) then 1 else 0 }'/>
+      <xs:element name="firstNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../firstName)) then 1 else 0 }'/>
+      <xs:element name="middleNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../middleName)) then 1 else 0 }'/>
+      <xs:element name="DOBPI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../DOB)) then 1 else 0 }'/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:element name="file">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
+              <xs:group ref="tns:discriminateTrue"/>
+              <xs:element name="lastName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../lastNamePI }' />
+              <xs:element name="middleName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../middleNamePI }' />
+              <xs:element name="firstName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../firstNamePI }' />
+              <xs:element name="DOB" type="xs:date" minOccurs="0"
+                          dfdl:occursCount='{ ../DOBPI }'
+                          dfdl:calendarPattern="MMddyyyy"
+                          dfdl:calendarPatternKind="explicit"
+                          dfdl:binaryCalendarRep="bcd"
+                          dfdl:lengthKind="explicit"
+                          dfdl:lengthUnits="bytes"
+                          dfdl:length="4"
+                          dfdl:alignment="8"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

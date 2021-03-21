@@ -70,3 +70,33 @@ daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd \
 cat src/test/resources/com/tresys/csv/data/nameDOB3.csv | \
 daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd | \
 daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB3.dfdl.xsd
+
+#
+# NameDOB4 - escape schemes
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB4.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB4.csv
+
+daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB4.dfdl.xsd \
+  src/test/resources/com/tresys/csv/infosets/nameDOB4.xml
+
+#
+# NameDOB5 - dynamic separator
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB5.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB5.csv
+
+daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB5.dfdl.xsd \
+  src/test/resources/com/tresys/csv/infosets/nameDOB5.xml
+
+#
+# NameDOB7 - binary with hidden flags
+#
+
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/nameDOB7.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/nameDOB6.bin
+
+daffodil unparse -s src/main/resources/com/tresys/csv/xsd/nameDOB7.dfdl.xsd \
+  src/test/resources/com/tresys/csv/infosets/nameDOB7.xml | \
+  od -v -t x1
+
