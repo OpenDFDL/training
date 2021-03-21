@@ -12,6 +12,12 @@ daffodil parse -s src/main/resources/com/tresys/csv/xsd/csv.dfdl.xsd \
   src/test/resources/com/tresys/csv/data/simpleCSV.bad.1.csv
 
 #
+# Parse CSV showing that many degenerate forms are accepted.
+#
+daffodil parse -s src/main/resources/com/tresys/csv/xsd/csv.dfdl.xsd \
+  src/test/resources/com/tresys/csv/data/simpleCSV2.csv
+
+#
 # Parse with header enforcement (showing it works)
 #
 daffodil parse -s src/main/resources/com/tresys/csv/xsd/csvHeaderEnforced.dfdl.xsd \
