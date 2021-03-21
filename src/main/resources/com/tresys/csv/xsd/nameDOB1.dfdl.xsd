@@ -22,18 +22,47 @@
     </xs:appinfo>
   </xs:annotation>
 
-  <xs:element name="file" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+  <!--
+  EXERCISE
+
+  Add a dfdl:initiator property that accepts the whole title line
+  of last,first,middle,DOB
+  as a single initiator string. Include the termination of the title line as
+  "%NL;"
+  -->
+  <xs:element name="file" >
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
+        <!--
+        EXERCISE
+
+        Each reccord is terminated by a newline. Add a dfdl:terminator with
+        value "%NL;" to indicate this.
+        -->
+        <xs:element name="record" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="lastName" type="xs:string" dfdl:terminator=","/>
-              <xs:element name="firstName" type="xs:string" dfdl:terminator=","/>
-              <xs:element name="middleName" type="xs:string" dfdl:terminator=","/>
-              <xs:element name="DOB" type="xs:date"
-                dfdl:calendarPattern="MM/dd/yyyy"
-                dfdl:calendarPatternKind="explicit"/>
+              <!--
+              EXERCISE
+
+              The elements corresponding to each column go here.
+
+              Declare each one as a string, and add a "," (comma)
+              as the terminator of all but the last one.
+
+              Use this naming convention for the capitalization of names: lastName
+              -->
+              ... First 3 elements go here ....
+              <!--
+              EXERCISE
+
+              The DOB element is of type xs:date.
+              Add properties calendarPattern and calendarPatternKind,
+              to accept dates in form like 03/25/2021.
+              -->
+              <xs:element name="DOB"
+                          ...
+                />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

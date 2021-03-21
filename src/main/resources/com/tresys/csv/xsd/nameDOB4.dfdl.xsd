@@ -14,14 +14,20 @@
   <xs:annotation>
     <xs:appinfo source="http://www.ogf.org/dfdl/">
 
-      <dfdl:defineEscapeScheme name="eb1">
+      <!--
+      EXERCISE
+
+      Define a named escape scheme "eb1" using dfdl:defineEscapeScheme, and the
+      dfdl:escapeScheme element.
+
+      Make it an "escapeBlock" kind, with block start " and block end ".
+      Pick an escapeEscapeCharacter.
+      You will also need generateEscapeBlock property,
+      and extraEscapedCharacters (defined to be there are none of these).
+      -->
+      <dfdl:defineEscapeScheme ...>
         <dfdl:escapeScheme
-          escapeKind="escapeBlock"
-          escapeBlockStart="&quot;"
-          escapeBlockEnd='"'
-          escapeEscapeCharacter='\'
-          generateEscapeBlock="whenNeeded"
-          extraEscapedCharacters=""
+          ...
         />
       </dfdl:defineEscapeScheme>
 
@@ -34,6 +40,13 @@
       />
 
       <!-- To avoid repetition, we create item and lastItem named formats -->
+
+      <!--
+      EXERCISE
+
+      Note that the item terminator is back to just being a "," (comma) for this
+      exercise.
+      -->
 
       <dfdl:defineFormat name="item">
         <dfdl:format
@@ -65,19 +78,25 @@
     </xs:sequence>
   </xs:group>
 
+<!--
+EXERCISE
+
+Note that no changes are required to the rest of this. It's the same as
+the prior nameDOB3.
+-->
   <xs:element name="file" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="lastName" type="xs:string" dfdl:ref="ex:item"/>
-              <xs:group ref="ex:discriminateTrue"/>
-              <xs:element name="firstName" type="xs:string" dfdl:ref="ex:item"/>
-              <xs:element name="middleName" type="xs:string" dfdl:ref="ex:item"/>
+              <xs:element name="lastName" type="xs:string" dfdl:ref="tns:item"/>
+              <xs:group ref="tns:discriminateTrue"/>
+              <xs:element name="firstName" type="xs:string" dfdl:ref="tns:item"/>
+              <xs:element name="middleName" type="xs:string" dfdl:ref="tns:item"/>
               <xs:element name="DOB" type="xs:date"
                 dfdl:calendarPattern="MM/dd/yyyy"
-                dfdl:calendarPatternKind="explicit" dfdl:ref="ex:lastItem"/>
+                dfdl:calendarPatternKind="explicit" dfdl:ref="tns:lastItem"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>

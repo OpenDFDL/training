@@ -74,11 +74,23 @@ SOFTWARE.
               the number of occurrences.
 
               You will need the dfdl:occursCount property and
-              the dfdl:occursCountKind property
+              the dfdl:occursCountKind property.
+
+              Lookup occursCountKind 'expression'
+
+              The occursCount property can be an expression.
+              You want an expression that counts the number of title elements in the
+              header row.
+
+              The relative path to that array is ../../header/title
+              You will want to call the fn:count(...) function.
+              Look up that function in the DFDL spec.
+
+              Expressions are surrounded by "{ expression here }" to distinguish
+              from literal text values.
               -->
               <xs:element name="item" type="xs:string" maxOccurs="unbounded"
-                          dfdl:occursCount="{ fn:count(../../header/title) }"
-                          dfdl:occursCountKind="expression"
+                          ...
               />
             </xs:sequence>
           </xs:complexType>

@@ -22,6 +22,11 @@
     </xs:appinfo>
   </xs:annotation>
 
+  <!--
+  EXERCISE
+
+  Here's the definition of the discriminator as a reusable group.
+  -->
   <xs:group name="discriminateTrue">
     <xs:sequence>
       <xs:annotation>
@@ -39,7 +44,23 @@
           <xs:complexType>
             <xs:sequence>
               <xs:element name="lastName" type="xs:string" dfdl:terminator=","/>
-              <xs:group ref="ex:discriminateTrue"/>
+              <!--
+              EXERCISE
+
+              Use a group reference to put the discriminator here, so that if the
+              first element parses, then we are assured there is another record.
+              There is no more uncertainty about the record's existence.
+
+              A reference to a global object in the schema must use a QName having
+              a prefix and localName.
+
+              The QName to use here is tns:discriminatorTrue.
+              "tns:" means "this target namespace". It is defined above.
+
+              Use "tns:" prefix to refer to types or groups or formats by QName.
+              Use "ex:" to refer to global elements.
+              -->
+              ... group ref goes here...
               <xs:element name="firstName" type="xs:string" dfdl:terminator=","/>
               <xs:element name="middleName" type="xs:string" dfdl:terminator=","/>
               <xs:element name="DOB" type="xs:date"

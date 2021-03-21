@@ -23,9 +23,16 @@
 
       <!-- To avoid repetition, we create item and lastItem named formats -->
 
+      <!-- EXERCISE
+
+      Skip forward to the file element definition below, and create the
+      terminator element as the first element of the record.
+
+      Then come back here and define the terminator for each item
+      to be the value of the terminator element.
       <dfdl:defineFormat name="item">
         <dfdl:format
-          terminator="{ ../terminator }"
+          terminator="{ ... relative path here ... }"
         />
       </dfdl:defineFormat>
 
@@ -53,20 +60,35 @@
     </xs:sequence>
   </xs:group>
 
+<!--
+EXERCISE
+
+Change the initiator, because the header row will now have a new first
+column named terminator
+-->
+
   <xs:element name="file" dfdl:initiator="terminator,last,first,middle,DOB%NL;%WSP*;">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="terminator" type="xs:string" dfdl:lengthKind="explicit" dfdl:length="1"/>
-              <xs:group ref="ex:discriminateTrue"/>
-              <xs:element name="lastName" type="xs:string" dfdl:ref="ex:item"/>
-              <xs:element name="firstName" type="xs:string" dfdl:ref="ex:item"/>
-              <xs:element name="middleName" type="xs:string" dfdl:ref="ex:item"/>
+              <!--
+              EXERCISE
+
+              Insert an element named "terminator" here.
+              It is a string with lengthKind 'explicit' and length 1.
+
+              Move the discriminator to after this first terminator element.
+              -->
+              ... new element goes here...
+              <xs:element name="lastName" type="xs:string" dfdl:ref="tns:item"/>
+              <xs:group ref="tns:discriminateTrue"/>
+              <xs:element name="firstName" type="xs:string" dfdl:ref="tns:item"/>
+              <xs:element name="middleName" type="xs:string" dfdl:ref="tns:item"/>
               <xs:element name="DOB" type="xs:date"
                 dfdl:calendarPattern="MM/dd/yyyy"
-                dfdl:calendarPatternKind="explicit" dfdl:ref="ex:lastItem"/>
+                dfdl:calendarPatternKind="explicit" dfdl:ref="tns:lastItem"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>

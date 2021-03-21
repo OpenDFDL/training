@@ -55,6 +55,15 @@
     </xs:sequence>
   </xs:group>
 
+  <!--
+  EXERCISE
+
+  Put all four PI elements in a reusable group.
+
+  Study the dfdl:outputValueCalc expressions for each of these, and how they
+  compute a 1 or 0 depending on whether the corresponding element exists
+  or not. This is only used when unparsing.
+  -->
   <xs:group name="piGroup">
     <xs:sequence>
       <xs:element name="lastNamePI" type="tns:PI"
@@ -74,6 +83,19 @@
         <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
           <xs:complexType>
             <xs:sequence>
+              <!--
+              EXERCISE
+
+              Study the use of a hiddenGroupRef here.
+              This behaves as if that group were inlined here, except the
+              contents will not show up in the infoset. The elements within it
+              are hidden from the eventual result infoset.
+
+              Howwever, during parsing, the elements being parsed can refer
+              to the hidden elements just as before.
+
+              The declarations of the lastName... DOB elements are all the same.
+              -->
               <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
               <xs:group ref="tns:discriminateTrue"/>
               <xs:element name="lastName" type="tns:zString" minOccurs="0"
