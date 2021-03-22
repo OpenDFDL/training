@@ -1,0 +1,13 @@
+
+#
+# Lab 1 - NameDOB1
+#
+daffodil parse -s src/main/resources/lab1/com/tresys/csv/xsd/nameDOB1.dfdl.xsd \
+  src/test/resources/lab1/com/tresys/csv/data/nameDOB1.csv
+
+#
+# Lab 1 - NameDOB1 - with date error - ends with "left over data" and
+# an infoset that is missing the final row data.
+#
+daffodil parse -s src/main/resources/lab1/com/tresys/csv/xsd/nameDOB1.dfdl.xsd \
+  src/test/resources/lab1/com/tresys/csv/data/nameDOB1.bad.csv

@@ -1,0 +1,9 @@
+
+#
+# Lab 5 - NameDOB5 - dynamic separator
+#
+daffodil parse -s src/main/resources/lab5/com/tresys/csv/xsd/nameDOB5.dfdl.xsd \
+  src/test/resources/lab5/com/tresys/csv/data/nameDOB5.csv
+
+daffodil unparse -s src/main/resources/lab5/com/tresys/csv/xsd/nameDOB5.dfdl.xsd \
+  src/test/resources/lab5/com/tresys/csv/infosets/nameDOB5.xml
