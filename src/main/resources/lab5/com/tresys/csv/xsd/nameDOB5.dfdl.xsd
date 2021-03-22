@@ -29,7 +29,7 @@
       terminator element as the first element of the record.
 
       Then come back here and define the terminator for each item
-      to be the value of the terminator element.
+      to be the value of the terminator element. -->
       <dfdl:defineFormat name="item">
         <dfdl:format
           terminator="{ ... relative path here ... }"

@@ -97,7 +97,7 @@
               EXERCISE
 
               Now add the first 3 data carrying
-              elements lastName, firstName, and middleNamec.
+              elements lastName, firstName, and middleName.
               Make them optional via minOccurs="0".
               Note that minOccurs is NOT a dfdl: property. It is an
               XML schema attribute of element declarations, so has no prefix

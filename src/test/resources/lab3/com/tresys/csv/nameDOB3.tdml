@@ -16,7 +16,7 @@
       <tdml:documentPart type="file">data/nameDOB3.csv</tdml:documentPart>
     </tdml:document>
     <tdml:infoset>
-      <tdml:dfdlInfoset type="file">infosets/nameDOB1.xml</tdml:dfdlInfoset>
+      <tdml:dfdlInfoset type="file">infosets/nameDOB3.xml</tdml:dfdlInfoset>
     </tdml:infoset>
   </tdml:parserTestCase>
 

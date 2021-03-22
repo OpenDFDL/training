@@ -36,7 +36,7 @@
         <!--
         EXERCISE
 
-        Each reccord is terminated by a newline. Add a dfdl:terminator with
+        Each record is terminated by a newline. Add a dfdl:terminator with
         value "%NL;" to indicate this.
         -->
         <xs:element name="record" maxOccurs="unbounded">

@@ -4,7 +4,7 @@
 #
 
 daffodil parse -s src/main/resources/lab7/com/tresys/csv/xsd/nameDOB7.dfdl.xsd \
-  src/test/resources/lab7/com/tresys/csv/data/nameDOB6.bin
+  src/test/resources/lab7/com/tresys/csv/data/nameDOB7.bin
 
 daffodil unparse -s src/main/resources/lab7/com/tresys/csv/xsd/nameDOB7.dfdl.xsd \
   src/test/resources/lab7/com/tresys/csv/infosets/nameDOB7.xml | \

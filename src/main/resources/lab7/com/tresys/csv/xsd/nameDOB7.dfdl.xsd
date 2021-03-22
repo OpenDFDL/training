@@ -92,7 +92,7 @@
               contents will not show up in the infoset. The elements within it
               are hidden from the eventual result infoset.
 
-              Howwever, during parsing, the elements being parsed can refer
+              However, during parsing, the elements being parsed can refer
               to the hidden elements just as before.
 
               The declarations of the lastName... DOB elements are all the same.
