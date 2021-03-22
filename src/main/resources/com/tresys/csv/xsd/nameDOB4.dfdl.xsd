@@ -68,11 +68,11 @@
     </xs:appinfo>
   </xs:annotation>
 
-  <xs:group name="discriminateTrue">
+  <xs:group name="discriminateAnyData">
     <xs:sequence>
       <xs:annotation>
         <xs:appinfo source="http://www.ogf.org/dfdl/">
-          <dfdl:discriminator test="{ fn:true() }"/>
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
         </xs:appinfo>
       </xs:annotation>
     </xs:sequence>
@@ -90,8 +90,8 @@ the prior nameDOB3.
         <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
           <xs:complexType>
             <xs:sequence>
+              <xs:group ref="tns:discriminateAnyData"/>
               <xs:element name="lastName" type="xs:string" dfdl:ref="tns:item"/>
-              <xs:group ref="tns:discriminateTrue"/>
               <xs:element name="firstName" type="xs:string" dfdl:ref="tns:item"/>
               <xs:element name="middleName" type="xs:string" dfdl:ref="tns:item"/>
               <xs:element name="DOB" type="xs:date"

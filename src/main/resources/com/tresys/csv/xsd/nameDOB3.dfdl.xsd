@@ -49,11 +49,11 @@
     </xs:appinfo>
   </xs:annotation>
 
-  <xs:group name="discriminateTrue">
+  <xs:group name="discriminateAnyData">
     <xs:sequence>
       <xs:annotation>
         <xs:appinfo source="http://www.ogf.org/dfdl/">
-          <dfdl:discriminator test="{ fn:true() }"/>
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
         </xs:appinfo>
       </xs:annotation>
     </xs:sequence>
@@ -65,18 +65,18 @@
         <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
           <xs:complexType>
             <xs:sequence>
-              <!--
-              EXERCISE
-
-              Add a dfdl:ref to each item, referring to the named "item" definition
-              above.
-
-              For the last DOB element, refer to the "lastItem" definition above.
-
-              Use "tns:" for the prefix of each QName.
-              -->
-              <xs:element name="lastName" type="xs:string" ... />
               <xs:group ref="tns:discriminateTrue"/>
+              <!--
+               EXERCISE
+
+               Add a dfdl:ref to each item, referring to the named "item" definition
+               above.
+
+               For the last DOB element, refer to the "lastItem" definition above.
+
+               Use "tns:" for the prefix of each QName.
+               -->
+              <xs:element name="lastName" type="xs:string" ... />
               <xs:element name="firstName" type="xs:string" ... />
               <xs:element name="middleName" type="xs:string" ... />
               <xs:element name="DOB" type="xs:date"

@@ -62,11 +62,11 @@
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
 
-  <xs:group name="discriminateTrue">
+  <xs:group name="discriminateAnyData">
     <xs:sequence>
       <xs:annotation>
         <xs:appinfo source="http://www.ogf.org/dfdl/">
-          <dfdl:discriminator test="{ fn:true() }"/>
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
         </xs:appinfo>
       </xs:annotation>
     </xs:sequence>
@@ -78,6 +78,7 @@
         <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
           <xs:complexType>
             <xs:sequence>
+              <xs:group ref="tns:discriminateAnyData"/>
               <!--
               EXERCISE
 
@@ -89,7 +90,6 @@
               a tns: prefix to refer to the global simple type definition.
               -->
               <xs:element ... />
-              <xs:group ref="tns:discriminateTrue"/>
               <xs:element ... />
               <xs:element ... />
               <xs:element ... />

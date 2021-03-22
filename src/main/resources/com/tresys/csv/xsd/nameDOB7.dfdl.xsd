@@ -45,11 +45,11 @@
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
 
-  <xs:group name="discriminateTrue">
+  <xs:group name="discriminateAnyData">
     <xs:sequence>
       <xs:annotation>
         <xs:appinfo source="http://www.ogf.org/dfdl/">
-          <dfdl:discriminator test="{ fn:true() }"/>
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
         </xs:appinfo>
       </xs:annotation>
     </xs:sequence>
@@ -83,6 +83,7 @@
         <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
           <xs:complexType>
             <xs:sequence>
+              <xs:group ref="tns:discriminateAnyData"/>
               <!--
               EXERCISE
 
@@ -97,7 +98,6 @@
               The declarations of the lastName... DOB elements are all the same.
               -->
               <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
-              <xs:group ref="tns:discriminateTrue"/>
               <xs:element name="lastName" type="tns:zString" minOccurs="0"
                           dfdl:occursCount='{ ../lastNamePI }' />
               <xs:element name="middleName" type="tns:zString" minOccurs="0"
