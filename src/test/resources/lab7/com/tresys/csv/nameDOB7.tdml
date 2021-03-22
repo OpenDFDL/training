@@ -13,7 +13,7 @@
     model="lab7/com/tresys/csv/xsd/nameDOB7.dfdl.xsd"
     roundTrip="onePass">
     <tdml:document>
-      <tdml:documentPart type="file">data/nameDOB6.bin</tdml:documentPart>
+      <tdml:documentPart type="file">data/nameDOB7.bin</tdml:documentPart>
     </tdml:document>
     <tdml:infoset>
       <tdml:dfdlInfoset type="file">infosets/nameDOB7.xml</tdml:dfdlInfoset>

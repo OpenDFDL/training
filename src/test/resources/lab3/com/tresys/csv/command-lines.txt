@@ -10,7 +10,7 @@ daffodil parse -s src/main/resources/lab3/com/tresys/csv/xsd/nameDOB3.dfdl.xsd \
 # which always uses commas.
 #
 daffodil unparse -s src/main/resources/lab3/com/tresys/csv/xsd/nameDOB3.dfdl.xsd \
-    src/test/resources/lab3/com/tresys/csv/infosets/nameDOB1.xml
+    src/test/resources/lab3/com/tresys/csv/infosets/nameDOB3.xml
 
 #
 # Lab 3 - Fun with unix pipes

@@ -3,7 +3,7 @@
 # Lab 2 - NameDOB2
 #
 daffodil parse -s src/main/resources/lab2/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
-  src/test/resources/lab2/com/tresys/csv/data/nameDOB1.csv
+  src/test/resources/lab2/com/tresys/csv/data/nameDOB2.csv
 
 #
 # Lab 2 - NameDOB2 - with date error.
@@ -12,4 +12,4 @@ daffodil parse -s src/main/resources/lab2/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
 # message
 #
 daffodil parse -s src/main/resources/lab2/com/tresys/csv/xsd/nameDOB2.dfdl.xsd \
-  src/test/resources/lab2/com/tresys/csv/data/nameDOB1.bad.csv
+  src/test/resources/lab2/com/tresys/csv/data/nameDOB2.bad.csv
