@@ -11,3 +11,7 @@ daffodil parse -s src/main/resources/lab1/com/tresys/csv/xsd/nameDOB1.dfdl.xsd \
 #
 daffodil parse -s src/main/resources/lab1/com/tresys/csv/xsd/nameDOB1.dfdl.xsd \
   src/test/resources/lab1/com/tresys/csv/data/nameDOB1.bad.csv
+
+# or run as TDML tests - this runs all (both) of the tests
+
+daffodil test -iii src/test/resources/lab1/com/tresys/csv/nameDOB1.tdml

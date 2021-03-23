@@ -1,30 +1,58 @@
 
 #
-# Lab 0 - Just parse CSV normally
+# Lab 0.1 - Just parse CSV normally
 #
 daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
   src/test/resources/lab0/com/tresys/csv/data/simpleCSV.csv
 
+# or run a TDML test
+
+daffodil test -iii -r src/test/resources/lab0/com/tresys/csv/csv.tdml csv_test
+
 #
-# Lab 0 - Parse CSV showing that nothing is enforcing row length
+# Lab 0.2 - Parse CSV showing that nothing is enforcing row length
 #
 daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
   src/test/resources/lab0/com/tresys/csv/data/simpleCSV.bad.1.csv
 
+# or run a TDML test
+
+daffodil test -iii -r src/test/resources/lab0/com/tresys/csv/csv.tdml csv_test_bad_ok
+
 #
-# Lab 0 - Parse CSV showing that many degenerate forms are accepted.
+# Lab 0.3 - Parse CSV showing that many degenerate forms are accepted.
 #
 daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
   src/test/resources/lab0/com/tresys/csv/data/simpleCSV2.csv
 
 #
-# Lab 0 - Parse with header enforcement (showing it works)
+# unparse that to see what we get back
+#
+# Note that it is NOT the same as the input. Rather we get canonical form back.
+#
+daffodil unparse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
+  src/test/resources/lab0/com/tresys/csv/infoset/simpleCSV2.xml
+
+# or run a TDML test - note that this test is roundTrip="twoPass"
+
+daffodil test -iii -r src/test/resources/lab0/com/tresys/csv/csv.tdml csv_test_2
+
+#
+# Lab 0.4 - Parse with header enforcement (showing it works)
+#
+# Use the csvHeaderEnforced.dfdl.xsd DFDL schema.
 #
 daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csvHeaderEnforced.dfdl.xsd \
   src/test/resources/lab0/com/tresys/csv/data/simpleCSV.csv
 
 #
-# Lab 0 - Parse with header enforcement (Negative test)
+# Lab 0.5 - Parse with header enforcement (Negative test)
 #
 daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csvHeaderEnforced.dfdl.xsd \
   src/test/resources/lab0/com/tresys/csv/data/simpleCSV.bad.1.csv
+#
+# What diagnostic message did you get back?
+#
+# or run a TDML test
+
+daffodil test -iii -r src/test/resources/lab0/com/tresys/csv/csv.tdml csv_test_bad_detected

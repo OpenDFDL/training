@@ -65,7 +65,7 @@
         <xs:element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
           <xs:complexType>
             <xs:sequence>
-              <xs:group ref="tns:discriminateTrue"/>
+              <xs:group ref="tns:discriminateAnyData"/>
               <!--
                EXERCISE
 

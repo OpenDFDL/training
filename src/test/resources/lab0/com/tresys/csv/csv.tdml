@@ -39,6 +39,12 @@
 
   <!--
   This test shows that separator suppression gives interesting behaviors
+
+  Note that this test requires twoPass mode.
+
+  That is because the excess separators are NOT reproduced exactly, nor are
+  multiple leading commas.
+
   -->
   <tdml:parserTestCase name="csv_test_2" root="file"
                        model="lab0/com/tresys/csv/xsd/csv.dfdl.xsd"

@@ -16,6 +16,10 @@ object TestNameDOB3 {
 class TestNameDOB3 {
   import TestNameDOB3._
 
-  @Test def test_nameDOB3_test1() { runner.runOneTest("nameDOB3_test1") }
+  @Test def test_nameDOB3_test1() { runner.trace.runOneTest("nameDOB3_test1") }
+  @Test def test_nameDOB3_test2() { runner.runOneTest("nameDOB3_test2") }
+
+  // EXERCISE
+  // Add a regression test driver line to invoke your new TDML test.
 
 }
