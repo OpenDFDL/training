@@ -79,8 +79,6 @@ column named terminator
 
               Insert an element named "terminator" here.
               It is a string with lengthKind 'explicit' and length 1.
-
-              Move the discriminator to after this first terminator element.
               -->
               ... new element goes here...
               <xs:element name="lastName" type="xs:string" dfdl:ref="tns:item"/>

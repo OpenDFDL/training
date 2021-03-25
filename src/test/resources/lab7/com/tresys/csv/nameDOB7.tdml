@@ -10,8 +10,7 @@
   defaultRoundTrip="onePass">
   
   <tdml:parserTestCase name="nameDOB7_testBin1" root="file"
-    model="lab7/com/tresys/csv/xsd/nameDOB7.dfdl.xsd"
-    roundTrip="onePass">
+    model="lab7/com/tresys/csv/xsd/nameDOB7.dfdl.xsd">
     <tdml:document>
       <tdml:documentPart type="file">data/nameDOB7.bin</tdml:documentPart>
     </tdml:document>

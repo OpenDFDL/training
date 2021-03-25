@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ex:file xmlns:ex="http://example.com">
+  <totalLen>48</totalLen>
+  <records>
+    <nRecords>2</nRecords>
     <record>
-      <lastName>smith, jr.</lastName>
-      <middleName>robert</middleName>
-      <firstName>brandon</firstName>
-      <DOB>1988-03-24</DOB>
+      <dataLen>31</dataLen>
+      <data>
+        <lastName>smith, jr.</lastName>
+        <middleName>robert</middleName>
+        <firstName>brandon</firstName>
+        <DOB>1988-03-24</DOB>
+      </data>
     </record>
     <record>
-      <DOB>2019-02-28</DOB>
+      <dataLen>5</dataLen>
+      <data>
+        <DOB>2019-02-28</DOB>
+      </data>
     </record>
-  </ex:file>
+  </records>
+</ex:file>

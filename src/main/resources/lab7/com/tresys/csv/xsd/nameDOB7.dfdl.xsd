@@ -20,8 +20,8 @@
                    bitOrder="mostSignificantBitFirst"
                    encoding="ASCII"
                    lengthUnits='bits'
-                   alignment="1"
                    alignmentUnits="bits"
+                   alignment="8"
                    occursCountKind="expression"
                    binaryNumberRep="binary"/>
 
@@ -32,7 +32,8 @@
 
   <xs:simpleType name="PI"
                  dfdl:lengthKind="explicit"
-                 dfdl:length="1">
+                 dfdl:length="1"
+                 dfdl:alignment="1">
     <xs:restriction base="xs:unsignedByte"/>
   </xs:simpleType>
 
@@ -40,8 +41,7 @@
 
   <xs:simpleType name="zString"
                  dfdl:lengthKind="delimited"
-                 dfdl:terminator="%NUL;"
-                 dfdl:alignment="8">
+                 dfdl:terminator="%NUL;">
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
 
@@ -66,53 +66,88 @@
   -->
   <xs:group name="piGroup">
     <xs:sequence>
-      <xs:element name="lastNamePI" type="tns:PI"
-                  dfdl:outputValueCalc='{ if (fn:exists(../lastName)) then 1 else 0 }'/>
-      <xs:element name="firstNamePI" type="tns:PI"
-                  dfdl:outputValueCalc='{ if (fn:exists(../firstName)) then 1 else 0 }'/>
-      <xs:element name="middleNamePI" type="tns:PI"
-                  dfdl:outputValueCalc='{ if (fn:exists(../middleName)) then 1 else 0 }'/>
-      <xs:element name="DOBPI" type="tns:PI"
-                  dfdl:outputValueCalc='{ if (fn:exists(../DOB)) then 1 else 0 }'/>
+      <!--
+      Adding an extra element tier here named "flags", allows us to give it an
+      explicit length of 8 bits.
+
+      That appears to then allow Daffodil's schema compiler to prove everything after
+      will be properly aligned, so no deadlocks of alignment and valueLength calculation can
+      occur.
+      -->
+      <xs:element name="flags" dfdl:lengthKind="explicit" dfdl:length="8">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="lastNamePI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../lastName)) then 1 else 0 }'/>
+            <xs:element name="firstNamePI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../firstName)) then 1 else 0 }'/>
+            <xs:element name="middleNamePI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../middleName)) then 1 else 0 }'/>
+            <xs:element name="DOBPI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../DOB)) then 1 else 0 }'/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
     </xs:sequence>
   </xs:group>
 
   <xs:element name="file">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
+        <xs:element name="totalLen" type="xs:int" dfdl:lengthKind="implicit"
+                    dfdl:outputValueCalc='{ dfdl:valueLength(../records, "bytes") }' />
+        <xs:element name="records">
           <xs:complexType>
             <xs:sequence>
-              <xs:group ref="tns:discriminateAnyData"/>
-              <!--
-              EXERCISE
+              <xs:element name="nRecords" type="xs:int" dfdl:lengthKind="implicit"
+                    dfdl:outputValueCalc='{ fn:count(../record) }'/>
+              <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="expression"
+                  dfdl:occursCount='{ ../nRecords }'>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:group ref="tns:discriminateAnyData"/>
+                    <!--
+                    EXERCISE
 
-              Study the use of a hiddenGroupRef here.
-              This behaves as if that group were inlined here, except the
-              contents will not show up in the infoset. The elements within it
-              are hidden from the eventual result infoset.
+                    Study the use of a hiddenGroupRef here.
+                    This behaves as if that group were inlined here, except the
+                    contents will not show up in the infoset. The elements within it
+                    are hidden from the eventual result infoset.
 
-              However, during parsing, the elements being parsed can refer
-              to the hidden elements just as before.
+                    However, during parsing, the elements being parsed can refer
+                    to the hidden elements just as before.
 
-              The declarations of the lastName... DOB elements are all the same.
-              -->
-              <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
-              <xs:element name="lastName" type="tns:zString" minOccurs="0"
-                          dfdl:occursCount='{ ../lastNamePI }' />
-              <xs:element name="middleName" type="tns:zString" minOccurs="0"
-                          dfdl:occursCount='{ ../middleNamePI }' />
-              <xs:element name="firstName" type="tns:zString" minOccurs="0"
-                          dfdl:occursCount='{ ../firstNamePI }' />
-              <xs:element name="DOB" type="xs:date" minOccurs="0"
-                          dfdl:occursCount='{ ../DOBPI }'
-                          dfdl:calendarPattern="MMddyyyy"
-                          dfdl:calendarPatternKind="explicit"
-                          dfdl:binaryCalendarRep="bcd"
-                          dfdl:lengthKind="explicit"
-                          dfdl:lengthUnits="bytes"
-                          dfdl:length="4"
-                          dfdl:alignment="8"/>
+                    The declarations of the lastName... DOB elements are all the same.
+                    -->
+                    <xs:element name="dataLen" type="xs:int" dfdl:lengthKind="implicit"
+                       dfdl:outputValueCalc='{ dfdl:valueLength(../data, "bytes") }' />
+                      <xs:element name="data">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
+                              <xs:sequence>
+                              <xs:element name="lastName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/lastNamePI }' />
+                              <xs:element name="middleName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/middleNamePI }' />
+                              <xs:element name="firstName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/firstNamePI }' />
+                              <xs:element name="DOB" type="xs:date" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/DOBPI }'
+                                          dfdl:calendarPattern="MMddyyyy"
+                                          dfdl:calendarPatternKind="explicit"
+                                          dfdl:binaryCalendarRep="bcd"
+                                          dfdl:lengthKind="explicit"
+                                          dfdl:lengthUnits="bytes"
+                                          dfdl:length="4"/>
+                              </xs:sequence>
+                          </xs:sequence>
+                        </xs:complexType>
+                     </xs:element> 
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>

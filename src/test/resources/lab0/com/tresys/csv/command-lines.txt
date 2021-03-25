@@ -7,6 +7,8 @@ daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
 
 # or run a TDML test
 
+export DAFFODIL_CLASSPATH=src/main/resources:src/test/resources
+
 daffodil test -iii -r src/test/resources/lab0/com/tresys/csv/csv.tdml csv_test
 
 #
@@ -31,7 +33,7 @@ daffodil parse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
 # Note that it is NOT the same as the input. Rather we get canonical form back.
 #
 daffodil unparse -s src/main/resources/lab0/com/tresys/csv/xsd/csv.dfdl.xsd \
-  src/test/resources/lab0/com/tresys/csv/infoset/simpleCSV2.xml
+  src/test/resources/lab0/com/tresys/csv/infosets/simpleCSV2.xml
 
 # or run a TDML test - note that this test is roundTrip="twoPass"
 

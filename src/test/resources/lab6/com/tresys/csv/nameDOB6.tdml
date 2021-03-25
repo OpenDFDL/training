@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
+<!-- Copyright (c) 2021 Owl Cyber Defense. All rights reserved. -->
 <testSuite suiteName="NameDOB"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
   xmlns:fn="http://www.w3.org/2005/xpath-functions"
@@ -13,11 +13,31 @@
     model="lab6/com/tresys/csv/xsd/nameDOB6.dfdl.xsd"
     roundTrip="onePass">
     <tdml:document>
-      <tdml:documentPart type="file">data/nameDOB6.bin</tdml:documentPart>
+      <tdml:documentPart type="bits">1111 0000</tdml:documentPart>
+      <tdml:documentPart type="byte"><![CDATA[
+  73 6d69 7468 2c20 6a72 2e00 726f 6265
+7274 0062 7261 6e64 6f6e 0003 2419 88
+]]></tdml:documentPart>
+      <tdml:documentPart type="bits">0001 0000</tdml:documentPart>
+      <tdml:documentPart type="byte"><![CDATA[
+0228 2019                            
+]]></tdml:documentPart>
     </tdml:document>
     <tdml:infoset>
       <tdml:dfdlInfoset type="file">infosets/nameDOB6.xml</tdml:dfdlInfoset>
     </tdml:infoset>
   </tdml:parserTestCase>
+
+<--  <tdml:parserTestCase name="nameDOB6_testBin1" root="file"
+    model="lab6/com/tresys/csv/xsd/nameDOB6.dfdl.xsd"
+    roundTrip="onePass">
+    <tdml:document>
+      <tdml:documentPart type="file">data/nameDOB6.bin</tdml:documentPart>
+    </tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset type="file">infosets/nameDOB6.xml</tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:parserTestCase> 
+-->
 
 </testSuite>
