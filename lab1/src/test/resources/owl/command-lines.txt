@@ -1,0 +1,15 @@
+
+#
+# Lab 1 - NameDOB1
+#
+daffodil parse -s src/main/resources/owl/xsd/nameDOB1.dfdl.xsd src/test/resources/owl/data/nameDOB1.csv
+
+#
+# Lab 1 - NameDOB1 - with date error - ends with "left over data" and
+# an infoset that is missing the final row data.
+#
+daffodil parse -s src/main/resources/owl/xsd/nameDOB1.dfdl.xsd  src/test/resources/owl/data/nameDOB1.bad.csv
+
+# or run as TDML tests - this runs all (both) of the tests
+
+daffodil test -iii src/test/resources/owl/nameDOB1.tdml

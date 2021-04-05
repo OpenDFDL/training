@@ -1,0 +1,23 @@
+
+#
+# Lab 3 - NameDOB3 - , | or // as terminators of items.
+#
+daffodil parse -s src/main/resources/owl/xsd/nameDOB3.dfdl.xsd src/test/resources/owl/data/nameDOB3.csv
+
+#
+# Lab 3 - NameDOB3 unparsing - doesn't recreate the input. Creates Canonical form of data
+# which always uses commas.
+#
+daffodil unparse -s src/main/resources/owl/xsd/nameDOB3.dfdl.xsd src/test/resources/owl/infosets/nameDOB3.xml
+
+#
+# Lab 3 - Fun with unix pipes
+#
+cat src/test/resources/owl/data/nameDOB3.csv | \
+daffodil parse -s src/main/resources/owl/xsd/nameDOB3.dfdl.xsd | \
+daffodil unparse -s src/main/resources/owl/xsd/nameDOB3.dfdl.xsd
+
+# WINDOWS USERS USE Powershell
+daffodil parse -s src/main/resources/owl/xsd/nameDOB3.dfdl.xsd < `
+src/test/resources/owl/data/nameDOB3.csv | `
+daffodil unparse -s src/main/resources/owl/xsd/nameDOB3.dfdl.xsd

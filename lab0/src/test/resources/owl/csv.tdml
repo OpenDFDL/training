@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite suiteName="Namespaces"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:daf="urn:ogf:dfdl:2013:imp:daffodil.apache.org:2018:ext"
+  defaultRoundTrip="onePass">
+
+
+  <!--
+     This test is to exercise the csv schema.
+  -->
+  
+  <tdml:parserTestCase name="csv_test" root="file"
+    model="owl/xsd/csv.dfdl.xsd">
+    <tdml:document>
+      <tdml:documentPart type="file">data/simpleCSV.csv</tdml:documentPart>
+    </tdml:document>
+    <tdml:infoset>
+      <!-- <tdml:dfdlInfoset><ex:file xmlns:ex="http://example.com"></ex:file></tdml:dfdlInfoset> -->
+      <tdml:dfdlInfoset type="file">infosets/simpleCSV.xml</tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:parserTestCase>
+
+  <!--
+    This test shows that the basic csv.dfdl.xsd schema does not detect
+    mismatches between the counts of header titles and number of items
+    in a data row.
+   -->
+  <tdml:parserTestCase name="csv_test_bad_ok" root="file"
+                       model="owl/xsd/csv.dfdl.xsd">
+    <tdml:document>
+      <tdml:documentPart type="file">data/simpleCSV.bad.1.csv</tdml:documentPart>
+    </tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset type="file">infosets/simpleCSV.bad.1.xml</tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:parserTestCase>
+
+  <!--
+  This test shows that separator suppression gives interesting behaviors
+
+  Note that this test requires twoPass mode.
+
+  That is because the excess separators are NOT reproduced exactly, nor are
+  multiple leading commas.
+
+  -->
+  <tdml:parserTestCase name="csv_test_2" root="file"
+                       model="owl/xsd/csv.dfdl.xsd"
+    roundTrip="twoPass">
+    <tdml:document>
+      <tdml:documentPart type="file">data/simpleCSV2.csv</tdml:documentPart>
+    </tdml:document>
+    <tdml:infoset>
+      <tdml:dfdlInfoset type="file">infosets/simpleCSV2.xml</tdml:dfdlInfoset>
+    </tdml:infoset>
+  </tdml:parserTestCase>
+  
+  <!--
+      This test is to exercise the csv schema with an incorrect matching
+      of header title number with element number.
+  -->
+  
+  <tdml:parserTestCase name="csv_test_bad_detected" root="file"
+    model="owl/xsd/csvHeaderEnforced.dfdl.xsd"
+    implementations="daffodil">
+    <tdml:document>
+      <tdml:documentPart type="file">data/simpleCSV.bad.1.csv</tdml:documentPart>
+    </tdml:document>
+    <tdml:errors>
+      <tdml:error>Parse Error</tdml:error>
+      <tdml:error>Found out of scope delimiter</tdml:error>
+    </tdml:errors>
+  </tdml:parserTestCase>
+
+  
+</testSuite>

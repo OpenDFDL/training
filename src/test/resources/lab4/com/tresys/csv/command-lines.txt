@@ -1,9 +1,0 @@
-
-#
-# Lab 4 - NameDOB4 - escape schemes
-#
-daffodil parse -s src/main/resources/lab4/com/tresys/csv/xsd/nameDOB4.dfdl.xsd \
-  src/test/resources/lab4/com/tresys/csv/data/nameDOB4.csv
-
-daffodil unparse -s src/main/resources/lab4/com/tresys/csv/xsd/nameDOB4.dfdl.xsd \
-  src/test/resources/lab4/com/tresys/csv/infosets/nameDOB4.xml
