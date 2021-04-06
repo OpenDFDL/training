@@ -66,6 +66,70 @@
   -->
   <xs:group name="piGroup">
     <xs:sequence>
+      <xs:element name="lastNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../lastName)) then 1 else 0 }'/>
+      <xs:element name="firstNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../firstName)) then 1 else 0 }'/>
+      <xs:element name="middleNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../middleName)) then 1 else 0 }'/>
+      <xs:element name="DOBPI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../DOB)) then 1 else 0 }'/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:element name="file">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:group ref="tns:discriminateAnyData"/>
+              <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
+              <xs:element name="lastName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../lastNamePI }' />
+              <xs:element name="firstName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../firstNamePI }' />
+              <xs:element name="middleName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../middleNamePI }' />
+              <xs:element name="DOB" type="xs:date" minOccurs="0"
+                          dfdl:occursCount='{ ../DOBPI }'
+                          dfdl:calendarPattern="MMddyyyy"
+                          dfdl:calendarPatternKind="explicit"
+                          dfdl:binaryCalendarRep="bcd"
+                          dfdl:lengthKind="explicit"
+                          dfdl:lengthUnits="bytes"
+                          dfdl:length="4"
+                          dfdl:alignment="8"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+  Below is a very advanced example.
+
+  It computes the total length of the whole data structure, and stores it in the header.
+  It computes the number of records and stores that at the front also.
+
+  These above 2 things are *really bad ideas* because they completely defeat the
+  ability of the data to be streamed when unparsing. The whole file of data is going
+  to be buffered up so as to compute these lengths/counts before anything can be written out.
+
+  But if it is forced to do so by the nature of the format like this, Daffodil will do
+  all of that for you.
+
+  This schema also computes, for each record, the length of the entirety of the data, and stores
+  that in a header of each record. That part is a lot less problematic. It doesn't defeat
+  streaming.
+
+  Daffodil's streaming unparser handles all of this.
+
+  -->
+
+  <xs:group name="piGroup2">
+    <xs:sequence>
       <!--
       Adding an extra element tier here named "flags", allows us to give it an
       explicit length of 8 bits.
@@ -73,6 +137,8 @@
       That appears to then allow Daffodil's schema compiler to prove everything after
       will be properly aligned, so no deadlocks of alignment and valueLength calculation can
       occur.
+
+      This is an unmotivated trick, and the need for it may be a Daffodil bug.
       -->
       <xs:element name="flags" dfdl:lengthKind="explicit" dfdl:length="8">
         <xs:complexType>
@@ -92,14 +158,23 @@
     </xs:sequence>
   </xs:group>
 
-  <xs:element name="file">
+
+  <xs:element name="file2">
     <xs:complexType>
       <xs:sequence>
+        <!--
+        Up front we store the length of the entire structure
+        This completely defeats any unparser streaming
+        -->
         <xs:element name="totalLen" type="xs:int" dfdl:lengthKind="implicit"
                     dfdl:outputValueCalc='{ dfdl:valueLength(../records, "bytes") }' />
         <xs:element name="records">
           <xs:complexType>
             <xs:sequence>
+              <!--
+              At the start of all records we store the record count.
+              This also completely defeats any unparser streaming.
+              -->
               <xs:element name="nRecords" type="xs:int" dfdl:lengthKind="implicit"
                     dfdl:outputValueCalc='{ fn:count(../record) }'/>
               <xs:element name="record" maxOccurs="unbounded" dfdl:occursCountKind="expression"
@@ -108,31 +183,31 @@
                   <xs:sequence>
                     <xs:group ref="tns:discriminateAnyData"/>
                     <!--
-                    EXERCISE
+                    We store here the length of the data in each record. This
+                    encompasses the piGroup flags, and the following data.
 
-                    Study the use of a hiddenGroupRef here.
-                    This behaves as if that group were inlined here, except the
-                    contents will not show up in the infoset. The elements within it
-                    are hidden from the eventual result infoset.
+                    This is redundant, but illustrative.
 
-                    However, during parsing, the elements being parsed can refer
-                    to the hidden elements just as before.
+                    A data format with this sort of internal header within a sub-record
+                    does not necessarily destroy the ability of the format to be
+                    streamed when unparsing.
 
-                    The declarations of the lastName... DOB elements are all the same.
+                    These forward references get incrementally resolved as the records
+                    arrive at the unparser.
                     -->
                     <xs:element name="dataLen" type="xs:int" dfdl:lengthKind="implicit"
                        dfdl:outputValueCalc='{ dfdl:valueLength(../data, "bytes") }' />
                       <xs:element name="data">
                           <xs:complexType>
                             <xs:sequence>
-                              <xs:sequence dfdl:hiddenGroupRef="tns:piGroup" />
+                              <xs:sequence dfdl:hiddenGroupRef="tns:piGroup2" />
                               <xs:sequence>
                               <xs:element name="lastName" type="tns:zString" minOccurs="0"
                                           dfdl:occursCount='{ ../flags/lastNamePI }' />
-                              <xs:element name="middleName" type="tns:zString" minOccurs="0"
-                                          dfdl:occursCount='{ ../flags/middleNamePI }' />
                               <xs:element name="firstName" type="tns:zString" minOccurs="0"
                                           dfdl:occursCount='{ ../flags/firstNamePI }' />
+                              <xs:element name="middleName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/middleNamePI }' />
                               <xs:element name="DOB" type="xs:date" minOccurs="0"
                                           dfdl:occursCount='{ ../flags/DOBPI }'
                                           dfdl:calendarPattern="MMddyyyy"

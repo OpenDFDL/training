@@ -17,4 +17,10 @@ class TestNameDOB7 {
 
   @Test def test_nameDOB7_testBin1() { runner.runOneTest("nameDOB7_testBin1") }
 
+  //
+  // This additional test shows much more complex outputValueCalcs of
+  // stored occurs counts and lengths.
+  //
+  @Test def test_nameDOB7_testBin1_b() { runner.runOneTest("nameDOB7_testBin1_b") }
+
 }
