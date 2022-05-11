@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format ref="tns:GeneralFormat"
+                   representation="binary"
+                   byteOrder="bigEndian"
+                   bitOrder="mostSignificantBitFirst"
+                   encoding="ASCII"
+                   lengthUnits='bits'
+                   alignmentUnits="bits"
+                   alignment="8"
+                   occursCountKind="expression"
+                   binaryNumberRep="binary"/>
+
+    </appinfo>
+  </annotation>
+
+  <!-- Presence Indicators or PIs -->
+
+  <simpleType name="PI"
+                 dfdl:lengthKind="explicit"
+                 dfdl:length="1"
+                 dfdl:alignment="1">
+    <restriction base="xs:unsignedByte"/>
+  </simpleType>
+
+  <!-- NUL terminated strings -->
+
+  <simpleType name="zString"
+                 dfdl:lengthKind="delimited"
+                 dfdl:terminator="%NUL;">
+    <restriction base="xs:string"/>
+  </simpleType>
+
+  <group name="discriminateAnyData">
+    <sequence>
+      <annotation>
+        <appinfo source="http://www.ogf.org/dfdl/">
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
+        </appinfo>
+      </annotation>
+    </sequence>
+  </group>
+
+  <!--
+  EXERCISE
+
+  Put all four PI elements in a reusable group.
+
+  Study the dfdl:outputValueCalc expressions for each of these, and how they
+  compute a 1 or 0 depending on whether the corresponding element exists
+  or not. This is only used when unparsing.
+  -->
+  <group name="piGroup">
+    <sequence>
+      <!--
+      First one is done for you
+      -->
+      <element name="lastNamePI" type="tns:PI"
+                  dfdl:outputValueCalc='{ if (fn:exists(../lastName)) then 1 else 0 }'/>
+
+      <!-- 3 more presence indicator elements go here -->
+
+    </sequence>
+  </group>
+
+  <element name="file">
+    <complexType>
+      <sequence>
+        <element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
+          <complexType>
+            <sequence>
+              <group ref="tns:discriminateAnyData"/>
+              <sequence dfdl:hiddenGroupRef="tns:piGroup" />
+              <element name="lastName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../lastNamePI }' />
+              <element name="firstName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../firstNamePI }' />
+              <element name="middleName" type="tns:zString" minOccurs="0"
+                          dfdl:occursCount='{ ../middleNamePI }' />
+              <element name="DOB" type="xs:date" minOccurs="0"
+                          dfdl:occursCount='{ ../DOBPI }'
+                          dfdl:calendarPattern="MMddyyyy"
+                          dfdl:calendarPatternKind="explicit"
+                          dfdl:binaryCalendarRep="bcd"
+                          dfdl:lengthKind="explicit"
+                          dfdl:lengthUnits="bytes"
+                          dfdl:length="4"
+                          dfdl:alignment="8"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <!--
+  Below is a very advanced example.
+
+  It computes the total length of the whole data structure, and stores it in the header.
+  It computes the number of records and stores that at the front also.
+
+  These above 2 things are *really bad ideas* because they completely defeat the
+  ability of the data to be streamed when unparsing. The whole file of data is going
+  to be buffered up so as to compute these lengths/counts before anything can be written out.
+
+  But if it is forced to do so by the nature of the format like this, Daffodil will do
+  all of that for you.
+
+  This schema also computes, for each record, the length of the entirety of the data, and stores
+  that in a header of each record. That part is a lot less problematic. It doesn't defeat
+  streaming.
+
+  Daffodil's streaming unparser handles all of this.
+
+  -->
+
+  <group name="piGroup2">
+    <sequence>
+      <!--
+      Adding an extra element tier here named "flags", allows us to give it an
+      explicit length of 8 bits.
+
+      That appears to then allow Daffodil's schema compiler to prove everything after
+      will be properly aligned, so no deadlocks of alignment and valueLength calculation can
+      occur.
+
+      This is an unmotivated trick, and the need for it may be a Daffodil bug.
+      -->
+      <element name="flags" dfdl:lengthKind="explicit" dfdl:length="8">
+        <complexType>
+          <sequence>
+            <element name="lastNamePI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../lastName)) then 1 else 0 }'/>
+            <element name="firstNamePI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../firstName)) then 1 else 0 }'/>
+            <element name="middleNamePI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../middleName)) then 1 else 0 }'/>
+            <element name="DOBPI" type="tns:PI"
+                        dfdl:outputValueCalc='{ if (fn:exists(../../DOB)) then 1 else 0 }'/>
+          </sequence>
+        </complexType>
+      </element>
+
+    </sequence>
+  </group>
+
+
+  <element name="file2">
+    <complexType>
+      <sequence>
+        <!--
+        Up front we store the length of the entire structure
+        This completely defeats any unparser streaming
+        -->
+        <element name="totalLen" type="xs:int" dfdl:lengthKind="implicit"
+                    dfdl:outputValueCalc='{ dfdl:valueLength(../records, "bytes") }' />
+        <element name="records">
+          <complexType>
+            <sequence>
+              <!--
+              At the start of all records we store the record count.
+              This also completely defeats any unparser streaming.
+              -->
+              <element name="nRecords" type="xs:int" dfdl:lengthKind="implicit"
+                    dfdl:outputValueCalc='{ fn:count(../record) }'/>
+              <element name="record" maxOccurs="unbounded" dfdl:occursCountKind="expression"
+                  dfdl:occursCount='{ ../nRecords }'>
+                <complexType>
+                  <sequence>
+                    <group ref="tns:discriminateAnyData"/>
+                    <!--
+                    We store here the length of the data in each record. This
+                    encompasses the piGroup flags, and the following data.
+
+                    This is redundant, but illustrative.
+
+                    A data format with this sort of internal header within a sub-record
+                    does not necessarily destroy the ability of the format to be
+                    streamed when unparsing.
+
+                    These forward references get incrementally resolved as the records
+                    arrive at the unparser.
+                    -->
+                    <element name="dataLen" type="xs:int" dfdl:lengthKind="implicit"
+                       dfdl:outputValueCalc='{ dfdl:valueLength(../data, "bytes") }' />
+                      <element name="data">
+                          <complexType>
+                            <sequence>
+                              <sequence dfdl:hiddenGroupRef="tns:piGroup2" />
+                              <sequence>
+                              <element name="lastName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/lastNamePI }' />
+                              <element name="firstName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/firstNamePI }' />
+                              <element name="middleName" type="tns:zString" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/middleNamePI }' />
+                              <element name="DOB" type="xs:date" minOccurs="0"
+                                          dfdl:occursCount='{ ../flags/DOBPI }'
+                                          dfdl:calendarPattern="MMddyyyy"
+                                          dfdl:calendarPatternKind="explicit"
+                                          dfdl:binaryCalendarRep="bcd"
+                                          dfdl:lengthKind="explicit"
+                                          dfdl:lengthUnits="bytes"
+                                          dfdl:length="4"/>
+                              </sequence>
+                          </sequence>
+                        </complexType>
+                     </element>
+                  </sequence>
+                </complexType>
+              </element>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  
+</schema>

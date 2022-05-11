@@ -1,0 +1,7 @@
+
+#
+# Lab 5 - NameDOB5 - dynamic separator
+#
+daffodil parse -s src/nameDOB5.dfdl.xsd test/nameDOB5.csv
+
+daffodil unparse -s src/nameDOB5.dfdl.xsd test/nameDOB5.xml

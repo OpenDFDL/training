@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite
+  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:daf="urn:ogf:dfdl:2013:imp:daffodil.apache.org:2018:ext"
+  defaultRoundTrip="onePass">
+
+  <!--
+     This test is to exercise the csv schema.
+  -->
+  
+  <parserTestCase name="csv_test" root="file"
+    model="src/csv.dfdl.xsd">
+    <document>
+      <documentPart type="file">simpleCSV.csv</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">simpleCSV.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  <!--
+    This test shows that the basic csv.dfdl.xsd schema does not detect
+    mismatches between the counts of header titles and number of items
+    in a data row.
+   -->
+  <parserTestCase name="csv_test_bad_ok" root="file"
+                       model="src/csv.dfdl.xsd">
+    <document>
+      <documentPart type="file">simpleCSV.bad.1.csv</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">simpleCSV.bad.1.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  <!--
+  This test shows that separator suppression gives interesting behaviors
+
+  Note that this test requires twoPass mode.
+
+  That is because the excess separators are NOT reproduced exactly, nor are
+  multiple leading commas.
+
+  -->
+  <parserTestCase name="csv_test_2" root="file"
+                       model="src/csv.dfdl.xsd"
+    roundTrip="twoPass">
+    <document>
+      <documentPart type="file">simpleCSV2.csv</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">simpleCSV2.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+  
+  <!--
+      This test is to exercise the csv schema with an incorrect matching
+      of header title number with element number.
+  -->
+  
+  <parserTestCase name="csv_test_bad_detected" root="file2"
+    model="src/csvHeaderEnforced.dfdl.xsd" >
+    <document>
+      <documentPart type="file">simpleCSV.bad.1.csv</documentPart>
+    </document>
+    <!--
+    <infoset>
+      <dfdlInfoset type="file">simpleCSV.bad.2.xml</dfdlInfoset>
+    </infoset>
+    -->
+    <errors>
+      <error>Parse Error</error>
+      <error>Found out of scope delimiter</error>
+    </errors>
+  </parserTestCase>
+
+  
+</testSuite>

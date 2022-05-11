@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format ref="tns:GeneralFormat"
+                   representation="binary"
+                   byteOrder="bigEndian"
+                   bitOrder="mostSignificantBitFirst"
+                   encoding="ASCII"
+                   lengthUnits='bits'
+                   alignment="1"
+                   alignmentUnits="bits"
+                   occursCountKind="expression"
+                   binaryNumberRep="binary"/>
+
+    </appinfo>
+  </annotation>
+
+  <!-- Presence Indicators or PIs -->
+
+  <!--
+  EXERCISE
+
+  Define a reusable simple type named "PI"
+  which is an unsignedByte, with explicit lengthKind
+  and length 1 bit.
+  -->
+  <simpleType name="PI"
+                 dfdl:lengthKind="explicit" dfdl:length="1"
+                 >
+    <!-- This is how you derive a new simple type from an existing one. -->
+    <restriction base="xs:unsignedByte">
+      <minInclusive value="0"/>
+      <maxInclusive value="1"/>
+    </restriction>
+  </simpleType>
+
+  <!-- NUL terminated strings -->
+
+  <!--
+  EXERCISE
+
+  Below is a reusable simple type named zString.
+
+  Add properties so it is delimited and the
+  terminator is the NUL character (ASCII 0).
+
+  You will need to use a DFDL character entity to represent NUL.
+
+  You will need to add a dfdl:alignment property of 8 (bits) since these
+  strings must be 8-bit aligned.
+  -->
+  <simpleType name="zString"
+                 dfdl:terminator="%NUL;"
+                 dfdl:alignment="8"
+                 dfdl:lengthKind="delimited" >
+    <restriction base="xs:string"/>
+  </simpleType>
+
+  <group name="discriminateAnyData">
+    <sequence>
+      <annotation>
+        <appinfo source="http://www.ogf.org/dfdl/">
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
+        </appinfo>
+      </annotation>
+    </sequence>
+  </group>
+
+  <element name="file">
+    <complexType>
+      <sequence>
+        <element name="record" maxOccurs="unbounded" dfdl:occursCountKind="implicit">
+          <complexType>
+            <sequence>
+              <group ref="tns:discriminateAnyData"/>
+              <!--
+              EXERCISE
+
+              Insert 4 elements here which are the presence indicator bits.
+              Corresponding to each element of data, the PI field should be named
+              with "PI" suffix e.g., lastNamePI.
+
+              Give each element the PI type defined above. Don't forget you need
+              a tns: prefix to refer to the global simple type definition.
+              -->
+              <element name="lastNamePI" type="tns:PI" />
+              <element name="firstNamePI" type="tns:PI" />
+              <element name="middleNamePI" type="tns:PI" />
+              <element name="DOBPI" type="tns:PI" />
+              <!--
+              EXERCISE
+
+              Now add the first 3 data carrying
+              elements lastName, firstName, and middleName.
+              Make them optional via minOccurs="0".
+              Note that minOccurs is NOT a dfdl: property. It is an
+              XML schema attribute of element declarations, so has no prefix
+              on its name.
+
+              These 3 elements each have the zString type defined above.
+
+              Note that the dfdl:occursCountKind above is "expression",
+              Provide a dfdl:occursCount expression for each that uses
+              the value of the presence indicator defined above.
+
+              E.g., for lastName, you will want the value of the
+              ../lastNamePI element.
+              -->
+              <element name="lastName" type="tns:zString" minOccurs="0" dfdl:occursCount='{ ../lastNamePI }' />
+              <element name="firstName" type="tns:zString" minOccurs="0" dfdl:occursCount='{ ../firstNamePI }' />
+              <element name="middleName" type="tns:zString" minOccurs="0" dfdl:occursCount='{ ../middleNamePI }' />
+              <!--
+              EXERCISE
+
+              For the DOB element, it has type xs:date, and minOccurs="0",
+              but several new properties are also added because the
+              representation of this wants to be 'bcd' a kind of packed
+              decimal data representation.
+
+              Study the properties here. Note that the calendar pattern
+              is different.
+              -->
+              <element name="DOB" type="xs:date" minOccurs="0"
+                          dfdl:occursCount='{ ../DOBPI }'
+                          dfdl:calendarPattern="MMddyyyy"
+                          dfdl:calendarPatternKind="explicit"
+                          dfdl:binaryCalendarRep="bcd"
+                          dfdl:lengthKind="explicit"
+                          dfdl:lengthUnits="bytes"
+                          dfdl:length="4"
+                          dfdl:alignment="8"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  
+</schema>

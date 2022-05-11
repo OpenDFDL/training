@@ -8,3 +8,4 @@ project/project/
 .cache-main
 .idea/
 *.iml
+.bsp

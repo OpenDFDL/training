@@ -1,0 +1,8 @@
+
+#
+# Lab 4 - NameDOB4 - escape schemes
+#
+daffodil parse -s src/nameDOB4.dfdl.xsd test/nameDOB4.csv
+
+daffodil unparse -s src/nameDOB4.dfdl.xsd test/nameDOB4.xml
+

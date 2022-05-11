@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+      <dfdl:format
+        ref="tns:GeneralFormat"
+        representation="text"
+        encoding="ASCII"
+        lengthKind="delimited"
+      />
+    </appinfo>
+  </annotation>
+
+  <!--
+  EXERCISE
+
+  Here's the definition of the discriminator as a reusable group.
+  -->
+  <group name="discriminateAnyData">
+    <sequence>
+      <annotation>
+        <appinfo source="http://www.ogf.org/dfdl/">
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
+        </appinfo>
+      </annotation>
+    </sequence>
+  </group>
+
+  <element name="file" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+    <complexType>
+      <sequence>
+        <element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
+          <complexType>
+            <sequence>
+              <!--
+              EXERCISE
+
+              Use a group reference to put the discriminator here, so that
+              if there is any data at all, then we are assured there is another record.
+              There is no more uncertainty about the record's existence.
+
+              A reference to a global object in the schema must use a QName having
+              a prefix and localName.
+
+              The QName to use here is tns:discriminateAnyData.
+              "tns:" means "target namespace". It is defined above.
+
+              Use "tns:" prefix to refer to types or groups or formats by QName.
+              Use "ex:" to refer to global elements.
+              -->
+              <group ref="tns:discriminateAnyData"/>
+              <element name="lastName" type="xs:string" dfdl:terminator=","/>
+              <element name="firstName" type="xs:string" dfdl:terminator=","/>
+              <element name="middleName" type="xs:string" dfdl:terminator=","/>
+              <element name="DOB" type="xs:date"
+                dfdl:calendarPattern="MM/dd/yyyy"
+                dfdl:calendarPatternKind="explicit"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  
+</schema>

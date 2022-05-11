@@ -1,0 +1,27 @@
+
+#
+# Lab 1 - NameDOB1
+#
+daffodil parse -s src/nameDOB1.dfdl.xsd test/nameDOB1.csv
+
+# Try it with the trace output (same command with -t before the parse option)
+daffodil -t parse -s src/nameDOB1.dfdl.xsd test/nameDOB1.csv
+
+#
+# Lab 1 - NameDOB1 - with date error - ends with "left over data" and
+# an infoset that is missing the final row data.
+#
+daffodil parse -s src/nameDOB1.dfdl.xsd  test/nameDOB1.bad.csv
+
+#
+# you can watch the failure happen in the trace
+
+daffodil -t parse -s src/nameDOB1.dfdl.xsd  test/nameDOB1.bad.csv
+
+# or run as TDML tests - this runs all (both) of the tests
+
+daffodil test -iii test/nameDOB1.tdml
+
+# to run just one test and the test name at end
+
+daffodil test -iii test/nameDOB1.tdml nameDOB_test1

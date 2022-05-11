@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testSuite suiteName="NameDOB"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:ex="http://example.com"
+  xmlns:tns="http://example.com"
+  defaultRoundTrip="onePass">
+  
+  <parserTestCase name="nameDOB6_testBin1" root="file"
+    model="src/nameDOB6.dfdl.xsd"
+    roundTrip="onePass">
+    <document>
+      <documentPart type="bits">1111 0000</documentPart>
+      <documentPart type="byte"><![CDATA[
+  73 6d69 7468 2c20 6a72 2e00 726f 6265
+7274 0062 7261 6e64 6f6e 0003 2419 88
+]]></documentPart>
+      <documentPart type="bits">0001 0000</documentPart>
+      <documentPart type="byte"><![CDATA[
+0228 2019                            
+]]></documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">nameDOB6.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+<!--  <parserTestCase name="nameDOB6_testBin1" root="file"
+    model="src/nameDOB6.dfdl.xsd"
+    roundTrip="onePass">
+    <document>
+      <documentPart type="file">nameDOB6.bin</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">nameDOB6.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+-->
+
+</testSuite>

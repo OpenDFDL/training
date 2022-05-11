@@ -1,0 +1,73 @@
+
+#
+# Lab 0.1 - Just parse CSV normally
+#
+
+daffodil parse -s src/csv.dfdl.xsd  test/simpleCSV.csv
+
+#
+# MS-Windows users
+#
+# The above command line should also work on MS-Windows in the CMD shell, or Powershell
+#
+# Note: most windows CMD commands accept "/" as well as "\" in paths. Not all do. (ex: the 'type' command does not.)
+# Using Powershell is recommended. Just type powershell at the cmd prompt and you are using it.
+#
+# Note: on MS-Windows CMD, to extend a command onto the next line use the ^ character at end of line
+# Note: on Powershell, to extend a commnad onto the next line use the ` (backtick) character at end of line
+
+#
+# Try to run a TDML test
+
+# Note that your environment variables must be setup like this:
+export DAFFODIL_CLASSPATH=src:test
+# MS-Windows users must use the environment variables dialog to add a
+# DAFFODIL_CLASSPATH environment variable with value src\main\resources;src\test\resources
+# note that is a semicolon separating the two paths.
+
+daffodil test -iii -r test/csv.tdml csv_test
+
+#
+# Lab 0.2 - Parse CSV showing that nothing is enforcing row length
+#
+daffodil parse -s src/csv.dfdl.xsd test/simpleCSV.bad.1.csv
+
+# or run a TDML test
+
+daffodil test -iii -r test/csv.tdml csv_test_bad_ok
+
+#
+# Lab 0.3 - Parse CSV showing that many degenerate forms are accepted.
+#
+daffodil parse -s src/csv.dfdl.xsd test/simpleCSV2.csv
+
+#
+# unparse that to see what we get back
+#
+# Note that it is NOT the same as the input. Rather we get canonical form back.
+#
+daffodil unparse -s src/csv.dfdl.xsd test/simpleCSV2.xml
+
+# or run a TDML test - note that this test is roundTrip="twoPass"
+
+daffodil test -iii -r test/csv.tdml csv_test_2
+
+#
+# Lab 0.4 - Parse with header enforcement (showing it works)
+#
+# Use the csvHeaderEnforced.dfdl.xsd DFDL schema.
+#
+daffodil parse -s src/csvHeaderEnforced.dfdl.xsd  test/simpleCSV.csv
+
+#
+# Lab 0.5 - Parse with header enforcement (Negative test)
+#
+daffodil parse -s src/csvHeaderEnforced.dfdl.xsd test/simpleCSV.bad.1.csv
+#
+# What diagnostic message did you get back?
+#
+# or run a TDML test. This test expects the errors and so passes,
+# but you can change the test in the csv.tdml file, to watch it fail from TDML
+# test execution if you want.
+
+daffodil test -iii -r test/csv.tdml csv_test_bad_detected

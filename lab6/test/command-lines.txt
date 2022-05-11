@@ -1,0 +1,13 @@
+
+#
+# Lab 6 = NameDOB6 - binary with flags
+#
+
+daffodil parse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.bin
+
+daffodil unparse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.xml | od -v -t x1
+
+# MS Windows users: use powershell
+
+daffodil unparse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.xml | format-hex
+

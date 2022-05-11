@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format
+        ref="tns:GeneralFormat"
+        representation="text"
+        encoding="ASCII"
+        lengthKind="delimited"
+      />
+
+      <!-- To avoid repetition, we create item and lastItem named formats -->
+
+      <!--
+      EXERCISE
+
+      Define a named format "item" using dfdl:defineFormat.
+
+      This format just defines a terminator which is a whitespace-separated
+      list of the alternative terminators, which should be "," (comma), "|",
+      "//" and TAB, which must be defined using a DFDL character entity.
+      Look up the DFDL character entity for TABs.
+      -->
+
+      <!-- define format here -->
+
+
+      <dfdl:defineFormat name="lastItem">
+        <!--
+        A last item explicitly has no terminator of its own.
+        It will be terminated by the enclosing record
+        -->
+        <dfdl:format
+          terminator=""
+        />
+      </dfdl:defineFormat>
+
+
+    </appinfo>
+  </annotation>
+
+  <group name="discriminateAnyData">
+    <sequence>
+      <annotation>
+        <appinfo source="http://www.ogf.org/dfdl/">
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
+        </appinfo>
+      </annotation>
+    </sequence>
+  </group>
+
+  <element name="file" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+    <complexType>
+      <sequence>
+        <element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
+          <complexType>
+            <sequence>
+              <group ref="tns:discriminateAnyData"/>
+              <!--
+               EXERCISE
+
+               Add a dfdl:ref to each item, referring to the named "item" definition
+               above.
+
+               For the last DOB element, refer to the "lastItem" definition above.
+
+               Use "tns:" for the prefix of each QName.
+               -->
+              <element name="lastName" type="xs:string"  />
+              <element name="firstName" type="xs:string" />
+              <element name="middleName" type="xs:string"  />
+              <element name="DOB" type="xs:date"
+                dfdl:calendarPattern="MM/dd/yyyy"
+                dfdl:calendarPatternKind="explicit"  />
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  
+</schema>

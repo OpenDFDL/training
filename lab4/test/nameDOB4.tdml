@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite suiteName="NameDOB"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:ex="http://example.com"
+  xmlns:tns="http://example.com"
+  defaultRoundTrip="onePass">
+
+  <parserTestCase name="nameDOB4_test1" root="file"
+    model="src/nameDOB4.dfdl.xsd">
+    <document>
+      <documentPart type="file">nameDOB4.csv</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">nameDOB4.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  
+</testSuite>

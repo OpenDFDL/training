@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <include schemaLocation="csv-base-format.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+      <dfdl:format ref="ex:baseFormat"/>
+    </appinfo>
+  </annotation>
+
+  <element name="file2">
+    <complexType>
+      <sequence dfdl:separator="%NL;" dfdl:separatorPosition="postfix">
+        <element name="header" minOccurs="0" maxOccurs="1"
+          dfdl:occursCountKind="implicit">
+          <complexType>
+            <sequence dfdl:separator=",">
+              <element name="title" type="xs:string" maxOccurs="unbounded" />
+            </sequence>
+          </complexType>
+        </element>
+        <element name="record" maxOccurs="unbounded">
+          <complexType>
+            <sequence dfdl:separator=",">
+              <!--
+              EXERCISE:
+
+              To enforce that the length of a row matches the length of
+              the header row, we must use DFDL properties to specify
+              the number of occurrences.
+
+              You will need the dfdl:occursCount property and
+              the dfdl:occursCountKind property.
+
+              Lookup occursCountKind 'expression'
+
+              The occursCount property can be an expression.
+              You want an expression that counts the number of title elements in the
+              header row.
+
+              The relative path to that array is ../../header/title
+              You will want to call the fn:count(...) function.
+              Look up that function in the DFDL spec.
+
+              Expressions are surrounded by "{ expression here }" to distinguish
+              from literal text values.
+              -->
+              <element name="item" type="xs:string" maxOccurs="unbounded"
+                          dfdl:occursCountKind='expression'
+                          dfdl:occursCount='{ fn:count(../../header/title) }'
+              />
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+</schema>

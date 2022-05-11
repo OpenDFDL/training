@@ -1,0 +1,13 @@
+
+#
+# Lab 2 - NameDOB2
+#
+daffodil parse -s src/nameDOB2.dfdl.xsd test/nameDOB2.csv
+
+#
+# Lab 2 - NameDOB2 - with date error.
+#
+# Use of terminators makes it simpler and now we get a xs:date-oriented error
+# message
+#
+daffodil parse -s src/nameDOB2.dfdl.xsd test/nameDOB2.bad.csv

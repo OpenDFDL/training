@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
+
+<schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
+  xmlns:tns="http://example.com"
+  xmlns:ex="http://example.com"
+  targetNamespace="http://example.com">
+
+  <include schemaLocation="org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format
+        ref="tns:GeneralFormat"
+        representation="text"
+        encoding="ASCII"
+        lengthKind="delimited"
+      />
+
+      <!-- To avoid repetition, we create item and lastItem named formats -->
+
+      <!-- EXERCISE
+
+      Skip forward to the file element definition below, and create the
+      term element as the first element of the record.
+
+      Then come back here and define the terminator for each item
+      to be the value of the term element. -->
+      <dfdl:defineFormat name="item">
+        <dfdl:format
+          terminator="{ .... }"
+        />
+      </dfdl:defineFormat>
+
+      <dfdl:defineFormat name="lastItem">
+        <!--
+        A last item has no terminator of its own.
+        It will be terminated by the enclosing record
+        -->
+        <dfdl:format
+          terminator=""
+        />
+      </dfdl:defineFormat>
+
+
+    </appinfo>
+  </annotation>
+
+  <group name="discriminateAnyData">
+    <sequence>
+      <annotation>
+        <appinfo source="http://www.ogf.org/dfdl/">
+          <dfdl:discriminator testKind="pattern" testPattern="."/>
+        </appinfo>
+      </annotation>
+    </sequence>
+  </group>
+
+<!--
+EXERCISE
+
+Change the initiator, because the header row will now have a new first
+column named term
+-->
+
+  <element name="file" dfdl:initiator="last,first,middle,DOB%NL;%WSP*;">
+    <complexType>
+      <sequence>
+        <element name="record" maxOccurs="unbounded" dfdl:terminator="%NL;">
+          <complexType>
+            <sequence>
+              <group ref="tns:discriminateAnyData"/>
+              <!--
+              EXERCISE
+
+              Insert an element named "term" here.
+              It is a string with lengthKind 'explicit' and length 1.
+              -->
+              <!-- ... new element goes here... -->
+
+              <element name="lastName" type="xs:string" dfdl:ref="tns:item"/>
+              <element name="firstName" type="xs:string" dfdl:ref="tns:item"/>
+              <element name="middleName" type="xs:string" dfdl:ref="tns:item"/>
+              <element name="DOB" type="xs:date"
+                dfdl:calendarPattern="MM/dd/yyyy"
+                dfdl:calendarPatternKind="explicit" dfdl:ref="tns:lastItem"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  
+</schema>

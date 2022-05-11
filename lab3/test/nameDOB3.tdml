@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite suiteName="NameDOB"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:ex="http://example.com"
+  xmlns:tns="http://example.com"
+  defaultRoundTrip="onePass">
+
+  <parserTestCase name="nameDOB3_test1" root="file"
+    model="src/nameDOB3.dfdl.xsd" roundTrip="twoPass">
+    <document>
+      <documentPart type="file">nameDOB3.csv</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">nameDOB3.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  <parserTestCase name="DOB_test1" root="file"
+                       model="src/nameDOB3.dfdl.xsd"
+                       roundTrip="onePass">
+    <!--
+    Here's the data embedded directly in the test
+    -->
+    <document><![CDATA[03/24/1988]]></document>
+    <!--
+    Here's the expected infoset also embedded in the test
+    -->
+    <infoset>
+      <dfdlInfoset>
+        <ex:DOB>1988-03-24</ex:DOB>
+      </dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  <parserTestCase name="nameDOB3_test2" root="file"
+                       model="src/nameDOB3.dfdl.xsd"
+                       roundTrip="twoPass">
+    <!--
+    Here's the data embedded directly in the test
+    -->
+    <document><![CDATA[last,first,middle,DOB
+smith|robert|brandon//03/24/1988
+]]></document>
+    <!--
+    Here's the expected infoset also embedded in the test
+    -->
+    <infoset>
+      <dfdlInfoset>
+        <ex:file>
+          <record>
+            <lastName>smith</lastName>
+            <firstName>robert</firstName>
+            <middleName>brandon</middleName>
+            <DOB>1988-03-24</DOB>
+          </record>
+        </ex:file>
+      </dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  <!--
+  EXERCISE
+
+  Write another parserTestCase that tests another case of data this time covering
+  the corner case where the data has the title/heading line, but no rows of data
+  at all.
+
+  Will you need onePass or twoPass?
+
+  This is partly created for you below.
+  -->
+  <!--
+  <parserTestCase name="..." root="file"
+                       model="src/nameDOB3.dfdl.xsd"
+                       roundTrip="...">
+    ... data document here ...
+
+    ... expected infoset here...
+
+  </parserTestCase>
+  -->
+
+</testSuite>
