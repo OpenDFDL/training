@@ -5,9 +5,11 @@
 
 daffodil parse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.bin
 
-daffodil unparse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.xml | od -v -t x1
+daffodil unparse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.xml | xxd
 
 # MS Windows users: use powershell
 
 daffodil unparse -s src/nameDOB6.dfdl.xsd  test/nameDOB6.xml | format-hex
 
+# Run TDML test
+daffodil test -iii test/nameDOB6.tdml nameDOB6_testBin1

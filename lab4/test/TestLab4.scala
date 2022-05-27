@@ -1,6 +1,4 @@
 
-package com.tresys.csv
-
 import org.junit.Test
 import org.apache.daffodil.tdml.Runner
 import org.junit.AfterClass
@@ -15,6 +13,6 @@ object TestNameDOB4 {
 class TestNameDOB4 {
   import TestNameDOB4._
 
-  @Test def test_nameDOB4_test1() { runner.runOneTest("nameDOB4_test1") }
+  @Test def test_nameDOB4_test1(): Unit = { runner.runOneTest("nameDOB4_test1") }
 
 }

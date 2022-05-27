@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testSuite suiteName="NameDOB"
+<testSuite
+  suiteName="NameDOB"
+  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
   xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
-  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
-  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
   xmlns:ex="http://example.com"
   xmlns:tns="http://example.com"
   defaultRoundTrip="onePass">
@@ -20,7 +21,7 @@
     </infoset>
   </parserTestCase>
   
-  <parserTestCase name="nameDOB7_testBin1_b" root="file2"
+  <unparserTestCase name="nameDOB7_testBin1_b" root="file2"
     model="src/nameDOB7.dfdl.xsd">
     <document>
       <documentPart type="file">nameDOB7b.bin</documentPart>
@@ -28,6 +29,16 @@
     <infoset>
       <dfdlInfoset type="file">nameDOB7b.xml</dfdlInfoset>
     </infoset>
-  </parserTestCase>
+  </unparserTestCase>
+
+  <unparserTestCase name="nameDOB7_testBin1_c" root="file2"
+                    model="src/nameDOB7.dfdl.xsd" roundTrip="none">
+    <document>
+      <documentPart type="file">nameDOB7b.bin</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">nameDOB7c.xml</dfdlInfoset>
+    </infoset>
+  </unparserTestCase>
 
 </testSuite>

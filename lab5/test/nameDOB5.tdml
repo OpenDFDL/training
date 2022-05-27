@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. -->
 
-<testSuite suiteName="NameDOB"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:fn="http://www.w3.org/2005/xpath-functions"
-           xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
-           xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
-           xmlns="http://www.ibm.com/xmlns/dfdl/testData"
-           xmlns:ex="http://example.com"
-           xmlns:tns="http://example.com"
-           defaultRoundTrip="onePass">
+<testSuite
+  suiteName="NameDOB"
+  xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:ex="http://example.com"
+  xmlns:tns="http://example.com"
+  defaultRoundTrip="onePass">
 
   <parserTestCase name="nameDOB5_test1" root="file"
-                       model="owl/xsd/nameDOB5.dfdl.xsd">
+                  model="src/nameDOB5.dfdl.xsd">
     <document>
-      <documentPart type="file">data/nameDOB5.csv</documentPart>
+      <documentPart type="file">test/nameDOB5.csv</documentPart>
     </document>
     <infoset>
-      <dfdlInfoset type="file">infosets/nameDOB5.xml</dfdlInfoset>
+      <dfdlInfoset type="file">test/nameDOB5.xml</dfdlInfoset>
     </infoset>
   </parserTestCase>
-
 
 </testSuite>

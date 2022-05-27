@@ -6,8 +6,7 @@
   xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
-
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
   xmlns:ex="http://example.com"
   xmlns:tns="http://example.com"
   defaultRoundTrip="onePass">

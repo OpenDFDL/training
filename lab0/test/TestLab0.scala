@@ -1,5 +1,4 @@
 
-package com.tresys.csv
 
 import org.junit.Test
 import org.apache.daffodil.tdml.Runner
@@ -15,9 +14,9 @@ object TestCSV {
 class TestCSV {
   import TestCSV._
 
-  @Test def test_csv_test() { runner.runOneTest("csv_test") }
-  @Test def test_csv_test_2() { runner.runOneTest("csv_test_2") }
-  @Test def test_csv_test_bad_ok() { runner.runOneTest("csv_test_bad_ok") }
-  @Test def test_csv_test_bad_detected() { runner.runOneTest("csv_test_bad_detected") }
+  @Test def test_csv_test(): Unit = { runner.runOneTest("csv_test") }
+  @Test def test_csv_test_2(): Unit = { runner.runOneTest("csv_test_2") }
+  @Test def test_csv_test_bad_ok(): Unit = { runner.runOneTest("csv_test_bad_ok") }
+  @Test def test_csv_test_bad_detected(): Unit = { runner.runOneTest("csv_test_bad_detected") }
 
 }

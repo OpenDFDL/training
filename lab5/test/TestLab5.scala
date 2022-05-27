@@ -1,5 +1,4 @@
-/* Copyright (c) 2019 Tresys Technology, LLC. All rights reserved. */
-package com.tresys.csv
+
 
 import org.junit.Test
 import org.apache.daffodil.tdml.Runner
@@ -15,6 +14,8 @@ object TestNameDOB5 {
 class TestNameDOB5 {
   import TestNameDOB5._
 
-  @Test def test_nameDOB5_test1() { runner.runOneTest("nameDOB5_test1") }
+  @Test def test_nameDOB5_test1(): Unit = {
+    runner.runOneTest("nameDOB5_test1")
+  }
 
 }

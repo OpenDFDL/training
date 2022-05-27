@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testSuite suiteName="NameDOB"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-  xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" 
-  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+<testSuite
+  suiteName="NameDOB"
   xmlns="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
   xmlns:ex="http://example.com"
   xmlns:tns="http://example.com"
   defaultRoundTrip="onePass">
-  
+
   <parserTestCase name="nameDOB6_testBin1" root="file"
-    model="src/nameDOB6.dfdl.xsd"
-    roundTrip="onePass">
+                  model="src/nameDOB6.dfdl.xsd"
+                  roundTrip="onePass">
     <document>
       <documentPart type="bits">1111 0000</documentPart>
       <documentPart type="byte"><![CDATA[
@@ -24,11 +25,32 @@
 ]]></documentPart>
     </document>
     <infoset>
-      <dfdlInfoset type="file">nameDOB6.xml</dfdlInfoset>
+      <dfdlInfoset>
+        <ex:file xmlns:ex="http://example.com" xmlns="">
+          <record>
+            <lastNamePI>1</lastNamePI>
+            <firstNamePI>1</firstNamePI>
+            <middleNamePI>1</middleNamePI>
+            <DOBPI>1</DOBPI>
+            <lastName>smith, jr.</lastName>
+            <firstName>robert</firstName>
+            <middleName>brandon</middleName>
+            <DOB>1988-03-24</DOB>
+          </record>
+          <record>
+            <lastNamePI>0</lastNamePI>
+            <firstNamePI>0</firstNamePI>
+            <middleNamePI>0</middleNamePI>
+            <DOBPI>1</DOBPI>
+            <DOB>2019-02-28</DOB>
+          </record>
+        </ex:file>
+      </dfdlInfoset>
     </infoset>
   </parserTestCase>
 
-<!--  <parserTestCase name="nameDOB6_testBin1" root="file"
+  <!-- same test using file, not immediate data and infoset -->
+<parserTestCase name="nameDOB6_testBin1_from_files" root="file"
     model="src/nameDOB6.dfdl.xsd"
     roundTrip="onePass">
     <document>
@@ -38,6 +60,6 @@
       <dfdlInfoset type="file">nameDOB6.xml</dfdlInfoset>
     </infoset>
   </parserTestCase>
--->
+
 
 </testSuite>

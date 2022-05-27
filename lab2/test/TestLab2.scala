@@ -14,7 +14,7 @@ object TestNameDOB2 {
 class TestNameDOB2 {
   import TestNameDOB2._
 
-  @Test def test_nameDOB2_test1() { runner.runOneTest("nameDOB2_test1") }
-  @Test def test_nameDOB2_test_bad_1() { runner.runOneTest("nameDOB2_test_bad_1") }
+  @Test def test_nameDOB2_test1(): Unit = { runner.runOneTest("nameDOB2_test1") }
+  @Test def test_nameDOB2_test_bad_1(): Unit = { runner.runOneTest("nameDOB2_test_bad_1") }
 
 }

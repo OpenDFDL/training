@@ -5,9 +5,7 @@
 
 daffodil parse -s src/nameDOB7.dfdl.xsd  test/nameDOB7.bin
 
-daffodil unparse -s src/nameDOB7.dfdl.xsd \
-  test/nameDOB7.xml | \
-  od -v -t x1
+daffodil unparse -s src/nameDOB7.dfdl.xsd test/nameDOB7.xml | xxd
 
 # MS-Windows users, use powershell and this:
 daffodil unparse -s src/nameDOB7.dfdl.xsd `
@@ -30,3 +28,15 @@ daffodil unparse -s src/nameDOB7.dfdl.xsd `
 #
 # run all TDML tests
 daffodil test -iii test/nameDOB7.tdml
+
+#
+# For the more elaborate file2 example which has many more computed values in it
+#
+daffodil parse -s src/nameDOB7.dfdl.xsd -r file2 test/nameDOB7b.bin
+
+# unparse XML file that has garbage in the elements that will be recomputed
+daffodil unparse -s src/nameDOB7.dfdl.xsd -r file2 test/nameDOB7c.xml | xxd
+
+# reparse to see the computed values
+daffodil unparse -s src/nameDOB7.dfdl.xsd -r file2 test/nameDOB7c.xml | \
+  daffodil parse -s src/nameDOB7.dfdl.xsd -r file2
